@@ -19,6 +19,9 @@ outputs:
   project-key:
     description: The project key.
     value: ${{ steps.validate.outputs.project_key }}
+  project-label:
+    description: The project label for GitHub issue labeling.
+    value: ${{ steps.validate.outputs.project_label }}
   project-url:
     description: The classroom project board URL.
     value: ${{ steps.validate.outputs.project_url }}
@@ -31,6 +34,9 @@ outputs:
   module-num:
     description: The module number (e.g. "02").
     value: ${{ steps.validate.outputs.module_num }}
+  module-label:
+    description: The module label for GitHub issue labeling.
+    value: ${{ steps.validate.outputs.module_label }}
   assignees:
     description: Comma-separated list of team member GitHub usernames.
     value: ${{ steps.validate.outputs.assignees }}
@@ -77,10 +83,15 @@ runs:
             return;
           }
 
+          const moduleNum = selectedModule.split(' - ')[0];
+          const module = data.modules.find(m => m.number === moduleNum);
+
           core.setOutput('is_valid', 'true');
           core.setOutput('project_url', data.classroom.url);
           core.setOutput('project_name', team.name);
           core.setOutput('project_key', team.key);
+          core.setOutput('project_label', team.label || `project-${team.key.toLowerCase()}`);
           core.setOutput('repo_url', team.repo);
-          core.setOutput('module_num', selectedModule.split(' - ')[0]);
+          core.setOutput('module_num', moduleNum);
+          core.setOutput('module_label', module && module.label ? module.label : `module-${moduleNum}`);
           core.setOutput('assignees', team.members.join(','));

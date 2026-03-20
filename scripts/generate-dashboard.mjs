@@ -110,21 +110,30 @@ function buildMatrix(issues) {
     matrix[proj.key.toLowerCase()] = {};
   }
 
+  const moduleLabelMap = {};
+  for (const m of modules) {
+    moduleLabelMap[m.label || `module-${m.number}`] = m.number;
+  }
+  const projectLabelMap = {};
+  for (const p of projects) {
+    projectLabelMap[p.label || `project-${p.key.toLowerCase()}`] = p.key.toLowerCase();
+  }
+
   for (const issue of issues) {
     const labels = issue.labels.nodes.map((l) => l.name);
-    const moduleLabel = labels.find((l) => /^module-\d{2}$/.test(l));
-    const projectLabel = labels.find((l) => /^project-/.test(l));
+    const moduleLabel = labels.find((l) => l in moduleLabelMap);
+    const projectLabel = labels.find((l) => l in projectLabelMap);
 
     if (moduleLabel && !projectLabel) {
       console.warn(
-        `Warning: Issue #${issue.number} has ${moduleLabel} but no project- label — skipping`
+        `Warning: Issue #${issue.number} has ${moduleLabel} but no project label — skipping`
       );
       continue;
     }
     if (!moduleLabel || !projectLabel) continue;
 
-    const moduleNum = moduleLabel.replace("module-", "");
-    const projKey = projectLabel.replace("project-", "");
+    const moduleNum = moduleLabelMap[moduleLabel];
+    const projKey = projectLabelMap[projectLabel];
 
     if (!matrix[projKey]) {
       console.warn(

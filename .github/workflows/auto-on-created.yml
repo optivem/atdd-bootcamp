@@ -62,7 +62,7 @@ jobs:
         uses: ./.github/actions/add-labels
         with:
           issue-number: ${{ github.event.issue.number }}
-          labels: "module-${{ steps.validate.outputs.module-num }}, project-${{ steps.validate.outputs.project-key }}"
+          labels: "${{ steps.validate.outputs.module-label }}, ${{ steps.validate.outputs.project-label }}"
 
       - name: Set issue type to Task
         if: steps.validate.outputs.is-valid == 'true'
