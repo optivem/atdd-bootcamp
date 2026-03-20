@@ -43,9 +43,8 @@ runs:
           const newTitle = `${projectKey} | ${bootcampName} | ${selectedModule}`;
 
           let body = `## Overview\n\n`;
+          body += `**Project Name:** [${projectName}](${repoUrl})\n`;
           body += `**Bootcamp:** ${bootcampName}\n`;
-          body += `**Project Name:** ${projectName}\n`;
-          body += `**Project Repository:** ${repoUrl}\n`;
           body += `**Module:** ${selectedModule}\n`;
           const checklistPath = `checklists/${bootcampId}/${moduleNum}.md`;
           if (fs.existsSync(checklistPath)) {

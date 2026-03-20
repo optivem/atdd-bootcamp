@@ -116,12 +116,11 @@ async function fetchAllIssues(owner, repo) {
 // --- Build matrix for a single bootcamp ---
 
 function buildMatrix(issues, bootcamp) {
-  const projects = bootcamp.projects;
   const modules = bootcamp.modules;
 
   // matrix[projectKey][moduleNum] = { status, url }
   const matrix = {};
-  for (const proj of projects) {
+  for (const proj of config.projects) {
     matrix[proj.key.toLowerCase()] = {};
   }
 
@@ -168,33 +167,9 @@ function buildMatrix(issues, bootcamp) {
 
 function generateBootcampSection(bootcamp, matrix, owner, repo) {
   const modules = bootcamp.modules;
-  const projects = bootcamp.projects;
+  const projects = config.projects;  // All projects, not just bootcamp-specific
   const moduleCount = modules.length;
   const bootcampId = bootcamp.id;
-
-  if (projects.length === 0) {
-    return {
-      section: `
-  <div class="bootcamp-section" id="bootcamp-${escapeHtml(bootcampId)}">
-    <h2 class="bootcamp-title">${escapeHtml(bootcamp.name)}</h2>
-    <p class="bootcamp-empty">No projects enrolled yet.</p>
-  </div>`,
-      cards: `
-  <div class="bootcamp-section" id="bootcamp-${escapeHtml(bootcampId)}-mobile">
-    <h2 class="bootcamp-title">${escapeHtml(bootcamp.name)}</h2>
-    <p class="bootcamp-empty">No projects enrolled yet.</p>
-  </div>`
-    };
-  }
-
-  const moduleHeaders = modules.map((m) => {
-    const label = escapeHtml(m.number);
-    const fullTitle = `Module ${escapeHtml(m.number)} - ${escapeHtml(m.name)}`;
-    if (m.url) {
-      return `<th class="module-header"><a href="${escapeHtml(m.url)}" target="_blank" rel="noopener" title="${fullTitle}">${label}</a></th>`;
-    }
-    return `<th class="module-header" title="${fullTitle}">${label}</th>`;
-  }).join("\n            ");
 
   function statusPoints(status) {
     if (status === "Done") return 1;
@@ -202,6 +177,7 @@ function generateBootcampSection(bootcamp, matrix, owner, repo) {
     return 0;
   }
 
+  // Score projects for sorting columns (best progress first)
   const scored = projects.map((proj) => {
     const key = proj.key.toLowerCase();
     const data = matrix[key] || {};
@@ -218,47 +194,51 @@ function generateBootcampSection(bootcamp, matrix, owner, repo) {
   });
   scored.sort((a, b) => b.points - a.points);
 
-  const rows = scored
-    .map(({ proj, key, data, points, doneCount }) => {
-      const cells = modules.map((m) => {
-        const num = m.number;
-        const entry = data[num];
+  // Column headers: one per project
+  const projectHeaders = scored.map(({ proj, doneCount }) => {
+    const pct = Math.round((doneCount / moduleCount) * 100);
+    const nameHtml = proj.repo
+      ? `<a href="${escapeHtml(proj.repo)}" target="_blank" rel="noopener" title="${escapeHtml(proj.name)}">${escapeHtml(proj.key)}</a>`
+      : `<span title="${escapeHtml(proj.name)}">${escapeHtml(proj.key)}</span>`;
+    return `<th class="project-header" title="${escapeHtml(proj.name)} (${pct}%)">${nameHtml}</th>`;
+  }).join("\n            ");
 
-        if (!entry) {
-          const moduleName = `${m.number} - ${m.name}`;
-          const notice = `> **⚠️ This ticket is auto-generated. Please do not change the title or contents below. Just click the "Create" button below. After a few minutes, the ticket will be automatically assigned to a reviewer — no further action needed. You can add comments after the ticket is created.**`;
-          const issueBody = `${notice}\n\n### Bootcamp\n\n${bootcamp.name}\n\n### Project\n\n${proj.name}\n\n### Module\n\n${moduleName}\n\n${notice}`;
-          const newIssueUrl = `https://github.com/${owner}/${repo}/issues/new?title=${encodeURIComponent(moduleName)}&body=${encodeURIComponent(issueBody)}`;
-          return `<td class="cell cell-missing"><a href="${newIssueUrl}" target="_blank" rel="noopener" title="Create ticket for ${escapeHtml(moduleName)}">+</a></td>`;
-        }
+  // Rows: one per module
+  const rows = modules.map((m) => {
+    const moduleName = `${m.number} - ${m.name}`;
+    const moduleLabel = m.url
+      ? `<a href="${escapeHtml(m.url)}" target="_blank" rel="noopener">${escapeHtml(moduleName)}</a>`
+      : escapeHtml(moduleName);
 
-        const status = entry.status;
-        const statusClass = status.toLowerCase().replace(/\s+/g, "-");
-        const displayText = status === "Done" ? "✅ Done" : status;
+    const cells = scored.map(({ proj, data }) => {
+      const entry = data[m.number];
 
-        return `<td class="cell cell-${statusClass}"><a href="${entry.url}" target="_blank" rel="noopener" title="${status}">${displayText}</a></td>`;
-      }).join("\n              ");
+      if (!entry) {
+        const notice = `> **⚠️ This ticket is auto-generated. Please do not change the title or contents below. Just click the "Create" button below. After a few minutes, the ticket will be automatically assigned to a reviewer — no further action needed. You can add comments after the ticket is created.**`;
+        const issueBody = `${notice}\n\n### Bootcamp\n\n${bootcamp.name}\n\n### Project\n\n${proj.name}\n\n### Module\n\n${moduleName}\n\n${notice}`;
+        const newIssueUrl = `https://github.com/${owner}/${repo}/issues/new?title=${encodeURIComponent(moduleName)}&body=${encodeURIComponent(issueBody)}`;
+        return `<td class="cell cell-missing"><a href="${newIssueUrl}" target="_blank" rel="noopener" title="Create ticket for ${escapeHtml(proj.key)} - ${escapeHtml(moduleName)}">+</a></td>`;
+      }
 
-      const pct = Math.round((doneCount / moduleCount) * 100);
-      const progressClass = pct > 0 ? "progress-active" : "progress-none";
+      const status = entry.status;
+      const statusClass = status.toLowerCase().replace(/\s+/g, "-");
+      const displayText = status === "Done" ? "✅" : status;
 
-      const nameCell = proj.repo
-        ? `<a href="${escapeHtml(proj.repo)}" target="_blank" rel="noopener">${escapeHtml(proj.name)}</a>`
-        : escapeHtml(proj.name);
+      return `<td class="cell cell-${statusClass}"><a href="${entry.url}" target="_blank" rel="noopener" title="${escapeHtml(proj.key)}: ${status}">${displayText}</a></td>`;
+    }).join("\n              ");
 
-      const filterText = [proj.key, proj.name, ...proj.members.map(m => displayName(m)), ...proj.members].join(" ").toLowerCase();
-
-      return `          <tr data-filter="${escapeHtml(filterText)}">
-            <td class="project-code">${escapeHtml(proj.key)}</td>
-            <td class="project-name">${nameCell}</td>
-            <td class="project-lead" title="${escapeHtml(proj.members.map(m => displayName(m)).join(', '))}"><a href="https://github.com/${encodeURIComponent(proj.lead)}" target="_blank" rel="noopener">${escapeHtml(displayName(proj.lead))}</a></td>
-            <td class="cell progress-cell ${progressClass}" title="Score: ${points}/${moduleCount}"><div class="progress-bar" style="width:${pct}%"></div><div class="progress-label">${pct}%</div></td>
+    return `          <tr>
+            <td class="module-name">${moduleLabel}</td>
               ${cells}
           </tr>`;
-    })
-    .join("\n");
+  }).join("\n");
 
-  const moduleLegend = modules.map((m) => `      <div class="module-legend-item"><span>${escapeHtml(m.number)}</span> ${escapeHtml(m.name)}</div>`).join("\n");
+  // Progress row at bottom
+  const progressCells = scored.map(({ doneCount }) => {
+    const pct = Math.round((doneCount / moduleCount) * 100);
+    const progressClass = pct > 0 ? "progress-active" : "progress-none";
+    return `<td class="cell progress-cell ${progressClass}"><div class="progress-bar" style="width:${pct}%"></div><div class="progress-label">${pct}%</div></td>`;
+  }).join("\n              ");
 
   const section = `
   <div class="bootcamp-section" id="bootcamp-${escapeHtml(bootcampId)}">
@@ -267,23 +247,18 @@ function generateBootcampSection(bootcamp, matrix, owner, repo) {
       <table>
         <thead>
           <tr>
-            <th class="project-code">Code</th>
-            <th class="project-name">Project</th>
-            <th class="project-lead">Lead</th>
-            <th>Progress</th>
-            ${moduleHeaders}
+            <th class="module-name">Module</th>
+            ${projectHeaders}
           </tr>
         </thead>
         <tbody>
 ${rows}
+          <tr class="progress-row">
+            <td class="module-name"><strong>Progress</strong></td>
+              ${progressCells}
+          </tr>
         </tbody>
       </table>
-    </div>
-    <div class="module-legend">
-      <h3>Modules</h3>
-      <div class="module-legend-list">
-${moduleLegend}
-      </div>
     </div>
   </div>`;
 
