@@ -204,7 +204,7 @@ function generateHtml(matrix) {
 
         const status = entry.status;
         const statusClass = status.toLowerCase().replace(/\s+/g, "-");
-        const displayText = status === "Done" ? "✅" : status;
+        const displayText = status === "Done" ? "✅ Done" : status;
 
         return `<td class="cell cell-${statusClass}"><a href="${entry.url}" target="_blank" rel="noopener" title="${status}">${displayText}</a></td>`;
       }).join("\n              ");
