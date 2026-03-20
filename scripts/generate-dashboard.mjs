@@ -199,15 +199,14 @@ function generateHtml(matrix) {
           const notice = `> **⚠️ This ticket is auto-generated. Please do not change the title or contents below. Just click the "Create" button below. After a few minutes, the ticket will be automatically assigned to a reviewer — no further action needed. You can add comments after the ticket is created.**`;
           const issueBody = `${notice}\n\n### Project\n\n${proj.name}\n\n### Module\n\n${moduleName}\n\n${notice}`;
           const newIssueUrl = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/issues/new?title=${encodeURIComponent(moduleName)}&body=${encodeURIComponent(issueBody)}&labels=${encodeURIComponent('review')}`;
-          return `<td class="cell cell-missing"><a href="${newIssueUrl}" target="_blank" rel="noopener" title="Create ticket for ${escapeHtml(moduleName)}">⚪</a></td>`;
+          return `<td class="cell"><a href="${newIssueUrl}" target="_blank" rel="noopener" title="Create ticket for ${escapeHtml(moduleName)}">⚪</a></td>`;
         }
 
         const status = entry.status;
-        const statusClass = status.toLowerCase().replace(/\s+/g, "-");
         const emojiMap = { "Done": "✅", "In Review": "🔵", "In Progress": "🟠" };
         const displayText = emojiMap[status] || "";
 
-        return `<td class="cell cell-${statusClass}"><a href="${entry.url}" target="_blank" rel="noopener" title="${status}">${displayText}</a></td>`;
+        return `<td class="cell"><a href="${entry.url}" target="_blank" rel="noopener" title="${status}">${displayText}</a></td>`;
       }).join("\n              ");
 
       const pct = Math.round((doneCount / MODULE_COUNT) * 100);
@@ -303,12 +302,7 @@ ${moduleItems}
     .module-header a:hover { text-decoration: underline; }
     .cell a { text-decoration: none; display: block; width: 100%; }
     .cell a:hover { opacity: 0.8; }
-    .cell-missing { color: #9ca3af; }
-    .cell-missing a { color: #d1d5db; text-decoration: none; display: block; width: 100%; }
-    .cell-missing a:hover { color: #6b7280; }
-    .cell-in-review { background: #dbeafe; } .cell-in-review a { color: #1e40af; }
-    .cell-in-progress { background: #fef9c3; } .cell-in-progress a { color: #92400e; }
-    .cell-done { background: #dcfce7; } .cell-done a { color: #166534; }
+    .cell a { text-decoration: none; display: block; width: 100%; }
     .progress-cell { position: relative; min-width: 70px; padding: 0; overflow: hidden; }
     .progress-bar { position: absolute; top: 0; left: 0; height: 100%; z-index: 0; transition: width 0.3s; }
     .progress-label { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; height: 100%; padding: 6px 8px; font-weight: 600; font-size: 0.8rem; }
@@ -317,7 +311,6 @@ ${moduleItems}
     .progress-none .progress-label { color: #9ca3af; }
     .legend { margin-top: 16px; display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.8rem; }
     .legend-item { display: flex; align-items: center; gap: 6px; }
-    .legend-swatch { width: 16px; height: 16px; border-radius: 3px; border: 1px solid #d1d5db; }
     .module-legend { margin-top: 16px; font-size: 0.8rem; }
     .module-legend h3 { font-size: 0.85rem; margin-bottom: 6px; }
     .module-legend-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2px 24px; }
