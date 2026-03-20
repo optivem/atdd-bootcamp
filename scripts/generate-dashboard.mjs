@@ -199,12 +199,13 @@ function generateHtml(matrix) {
           const notice = `> **⚠️ This ticket is auto-generated. Please do not change the title or contents below. Just click the "Create" button below. After a few minutes, the ticket will be automatically assigned to a reviewer — no further action needed. You can add comments after the ticket is created.**`;
           const issueBody = `${notice}\n\n### Project\n\n${proj.name}\n\n### Module\n\n${moduleName}\n\n${notice}`;
           const newIssueUrl = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/issues/new?title=${encodeURIComponent(moduleName)}&body=${encodeURIComponent(issueBody)}&labels=${encodeURIComponent('review')}`;
-          return `<td class="cell cell-missing"><a href="${newIssueUrl}" target="_blank" rel="noopener" title="Create ticket for ${escapeHtml(moduleName)}">+</a></td>`;
+          return `<td class="cell cell-missing"><a href="${newIssueUrl}" target="_blank" rel="noopener" title="Create ticket for ${escapeHtml(moduleName)}">⚪</a></td>`;
         }
 
         const status = entry.status;
         const statusClass = status.toLowerCase().replace(/\s+/g, "-");
-        const displayText = status === "Done" ? "✅" : "";
+        const emojiMap = { "Done": "✅", "In Review": "🔵", "In Progress": "🟠" };
+        const displayText = emojiMap[status] || "";
 
         return `<td class="cell cell-${statusClass}"><a href="${entry.url}" target="_blank" rel="noopener" title="${status}">${displayText}</a></td>`;
       }).join("\n              ");
@@ -275,7 +276,7 @@ ${moduleItems}
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project Progress Dashboard</title>
+  <title>ATDD Classroom</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f9fafb; color: #111827; padding: 24px; }
@@ -370,7 +371,7 @@ ${moduleItems}
 <body>
   <div class="header">
     <div class="header-left">
-      <h1>Project Progress Dashboard</h1>
+      <h1>ATDD Classroom</h1>
       <p class="subtitle">Last updated: ${now}</p>
     </div>
     <nav class="nav-tabs">
@@ -403,9 +404,10 @@ ${rows}
 ${cards}
   </div>
   <div class="legend">
-    <div class="legend-item"><div class="legend-swatch" style="background:#dbeafe"></div> In Review</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:#fef9c3"></div> In Progress</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:#dcfce7"></div> ✅ Done</div>
+    <div class="legend-item">⚪ No ticket</div>
+    <div class="legend-item">🔵 In Review</div>
+    <div class="legend-item">🟠 In Progress</div>
+    <div class="legend-item">✅ Done</div>
   </div>
   <div class="module-legend">
     <h3>Modules</h3>
