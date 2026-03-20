@@ -1,7 +1,6 @@
 name: "Module Review"
 description: "Submit your sandbox project for review"
 title: ""
-labels: ["review"]
 body:
   - type: dropdown
     id: project
