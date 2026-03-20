@@ -270,10 +270,6 @@ ${moduleItems}
     })
     .join("\n");
 
-  const summaryCells = modules.map((m) => {
-    const count = scored.filter(({ data }) => data[m.number]?.status === "Done").length;
-    return `<td class="summary-cell">${count || ""}</td>`;
-  }).join("\n              ");
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -319,8 +315,6 @@ ${moduleItems}
     .progress-active .progress-bar { background: #bbf7d0; }
     .progress-active .progress-label { color: #166534; }
     .progress-none .progress-label { color: #9ca3af; }
-    .summary-cell { background: #f3f4f6; font-weight: 600; }
-    .summary-label { text-align: left; font-weight: 600; background: #f3f4f6; }
     .legend { margin-top: 16px; display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.8rem; }
     .legend-item { display: flex; align-items: center; gap: 6px; }
     .legend-swatch { width: 16px; height: 16px; border-radius: 3px; border: 1px solid #d1d5db; }
@@ -403,13 +397,6 @@ ${moduleItems}
       </thead>
       <tbody>
 ${rows}
-        <tr>
-          <td class="summary-cell"></td>
-          <td class="summary-label">Done</td>
-          <td class="summary-cell"></td>
-          <td class="summary-cell"></td>
-              ${summaryCells}
-        </tr>
       </tbody>
     </table>
   </div>
