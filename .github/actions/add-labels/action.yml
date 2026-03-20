@@ -20,7 +20,7 @@ runs:
 
           for (const label of labels) {
             const color = label.startsWith('module-') ? '0075ca'
-                        : label.startsWith('project-') ? '7057ff'
+                        : label.startsWith('project-') ? '5a32a3'
                         : 'ededed';
             try {
               await github.rest.issues.createLabel({
