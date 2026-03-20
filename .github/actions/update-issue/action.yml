@@ -35,14 +35,18 @@ runs:
           const selectedModule = '${{ inputs.module }}';
           const moduleNum = selectedModule.split(' - ')[0];
 
-          const newTitle = `${projectKey} | ${selectedModule}`;
+          const bootcampId = '${{ inputs.bootcamp-id }}';
+          const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+          const bootcamp = config.bootcamps.find(b => b.id === bootcampId);
+          const bootcampName = bootcamp ? bootcamp.name : bootcampId;
+
+          const newTitle = `${projectKey} | ${bootcampName} | ${selectedModule}`;
 
           let body = `## Overview\n\n`;
+          body += `**Bootcamp:** ${bootcampName}\n`;
           body += `**Project Name:** ${projectName}\n`;
           body += `**Project Repository:** ${repoUrl}\n`;
           body += `**Module:** ${selectedModule}\n`;
-
-          const bootcampId = '${{ inputs.bootcamp-id }}';
           const checklistPath = `checklists/${bootcampId}/${moduleNum}.md`;
           if (fs.existsSync(checklistPath)) {
             const checklist = fs.readFileSync(checklistPath, 'utf8').trim();

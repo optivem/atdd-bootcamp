@@ -227,9 +227,8 @@ function generateBootcampSection(bootcamp, matrix, owner, repo) {
         if (!entry) {
           const moduleName = `${m.number} - ${m.name}`;
           const notice = `> **⚠️ This ticket is auto-generated. Please do not change the title or contents below. Just click the "Create" button below. After a few minutes, the ticket will be automatically assigned to a reviewer — no further action needed. You can add comments after the ticket is created.**`;
-          const issueBody = `${notice}\n\n### Project\n\n${proj.name}\n\n### Module\n\n${moduleName}\n\n${notice}`;
-          const labels = `project-${key},bootcamp-${bootcampId},module-${m.number}`;
-          const newIssueUrl = `https://github.com/${owner}/${repo}/issues/new?title=${encodeURIComponent(moduleName)}&body=${encodeURIComponent(issueBody)}&labels=${encodeURIComponent(labels)}`;
+          const issueBody = `${notice}\n\n### Bootcamp\n\n${bootcamp.name}\n\n### Project\n\n${proj.name}\n\n### Module\n\n${moduleName}\n\n${notice}`;
+          const newIssueUrl = `https://github.com/${owner}/${repo}/issues/new?title=${encodeURIComponent(moduleName)}&body=${encodeURIComponent(issueBody)}`;
           return `<td class="cell cell-missing"><a href="${newIssueUrl}" target="_blank" rel="noopener" title="Create ticket for ${escapeHtml(moduleName)}">+</a></td>`;
         }
 
@@ -303,9 +302,8 @@ ${moduleLegend}
         if (!entry) {
           const moduleName = `${m.number} - ${m.name}`;
           const notice = `> **⚠️ This ticket is auto-generated. Please do not change the title or contents below. Just click the "Create" button below. After a few minutes, the ticket will be automatically assigned to a reviewer — no further action needed. You can add comments after the ticket is created.**`;
-          const issueBody = `${notice}\n\n### Project\n\n${proj.name}\n\n### Module\n\n${moduleName}\n\n${notice}`;
-          const labels = `project-${key},bootcamp-${bootcampId},module-${m.number}`;
-          const newIssueUrl = `https://github.com/${owner}/${repo}/issues/new?title=${encodeURIComponent(moduleName)}&body=${encodeURIComponent(issueBody)}&labels=${encodeURIComponent(labels)}`;
+          const issueBody = `${notice}\n\n### Bootcamp\n\n${bootcamp.name}\n\n### Project\n\n${proj.name}\n\n### Module\n\n${moduleName}\n\n${notice}`;
+          const newIssueUrl = `https://github.com/${owner}/${repo}/issues/new?title=${encodeURIComponent(moduleName)}&body=${encodeURIComponent(issueBody)}`;
           return `<li><span class="card-module-name">${escapeHtml(m.number)} - ${escapeHtml(m.name)}</span><span class="card-module-status card-status-missing"><a href="${newIssueUrl}" target="_blank" rel="noopener">+</a></span></li>`;
         }
         const statusClass = "card-status-" + entry.status.toLowerCase().replace(/\s+/g, "-");

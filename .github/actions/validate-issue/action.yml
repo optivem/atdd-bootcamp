@@ -81,17 +81,25 @@ runs:
             return;
           }
 
-          // Find which bootcamp this project belongs to
           const moduleNum = selectedModule.split(' - ')[0];
+
+          // Find bootcamp: prefer explicit ### Bootcamp field, fall back to matching by project key + module
+          const bootcampMatch = body.match(/### Bootcamp\s*\n\s*(.+)/);
+          const selectedBootcamp = bootcampMatch ? bootcampMatch[1].trim() : '';
           let bootcampId = '';
-          for (const bootcamp of data.bootcamps) {
-            const keys = (bootcamp.projectKeys || []).map(k => k.toUpperCase());
-            if (keys.includes(team.key.toUpperCase())) {
-              // Verify the module exists in this bootcamp
-              const hasModule = bootcamp.modules.some(m => m.number === moduleNum);
-              if (hasModule) {
-                bootcampId = bootcamp.id;
-                break;
+          if (selectedBootcamp) {
+            const found = data.bootcamps.find(b => b.name === selectedBootcamp);
+            if (found) bootcampId = found.id;
+          }
+          if (!bootcampId) {
+            for (const bootcamp of data.bootcamps) {
+              const keys = (bootcamp.projectKeys || []).map(k => k.toUpperCase());
+              if (keys.includes(team.key.toUpperCase())) {
+                const hasModule = bootcamp.modules.some(m => m.number === moduleNum);
+                if (hasModule) {
+                  bootcampId = bootcamp.id;
+                  break;
+                }
               }
             }
           }
