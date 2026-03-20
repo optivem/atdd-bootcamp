@@ -9,7 +9,7 @@
 
 ATDD Accelerator - Sandbox Project Reviews
 
-[Submit a Review Request](https://github.com/optivem/atdd-classroom/issues/new/choose) · [View Project Board](https://github.com/orgs/optivem/projects/18)
+[Submit a Review Request](https://github.com/optivem/atdd-classroom/issues/new/choose)
 
 ## How to submit your project for review
 
@@ -64,3 +64,7 @@ All statuses are updated automatically — you don't need to change them manuall
 | Reopen | Anyone (with comment) | Handled by comment rules above |
 
 When you've addressed feedback, add a comment on your issue describing what you changed. The status will automatically move back to **In Review**.
+
+## For Teachers
+
+[Project Board](https://github.com/orgs/optivem/projects/18)
