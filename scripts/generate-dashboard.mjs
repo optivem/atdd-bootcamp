@@ -114,9 +114,9 @@ function projectHeaderHtml(proj, done, total) {
 }
 
 function progressCellHtml(done, total) {
+  if (done === 0) return `<td class="cell progress-cell progress-none"></td>`;
   const p = pct(done, total);
-  const cls = p > 0 ? "progress-active" : "progress-none";
-  return `<td class="cell progress-cell ${cls}" title="${done} / ${total} tasks completed"><div class="progress-bar" style="width:${p}%"></div><div class="progress-label">${p}%</div></td>`;
+  return `<td class="cell progress-cell progress-active">${done} / ${total} (${p}%)</td>`;
 }
 
 function statusCellHtml(entry, proj) {
@@ -342,7 +342,6 @@ function renderMobileCards(bootcamp, scored, totalTasks) {
   const cards = scored
     .map(({ proj, data, doneCount }) => {
       const p = pct(doneCount, totalTasks);
-      const fillClass = p > 0 ? "fill-active" : "";
 
       const nameHtml = proj.repo
         ? `<a href="${escapeHtml(proj.repo)}" target="_blank" rel="noopener">${escapeHtml(proj.name)}</a>`
@@ -378,10 +377,7 @@ function renderMobileCards(bootcamp, scored, totalTasks) {
         <span class="card-code">${escapeHtml(proj.key)}</span>
       </div>
       <div class="card-lead">Lead: <a href="https://github.com/${encodeURIComponent(proj.lead)}" target="_blank" rel="noopener">${escapeHtml(displayName(proj.lead))}</a></div>
-      <div class="card-progress" title="${doneCount} / ${totalTasks} tasks completed">
-        <div class="card-progress-fill ${fillClass}" style="width:${p}%"></div>
-        <div class="card-progress-text">${p}%</div>
-      </div>
+      ${doneCount > 0 ? `<div class="card-progress-label">${doneCount} / ${totalTasks} (${p}%)</div>` : ""}
       <ul class="card-modules">
 ${moduleItems}
       </ul>

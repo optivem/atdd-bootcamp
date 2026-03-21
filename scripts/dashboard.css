@@ -42,12 +42,9 @@
     .cell-in-review { background: #dbeafe; } .cell-in-review a { color: #1e40af; }
     .cell-in-progress { background: #fef9c3; } .cell-in-progress a { color: #92400e; }
     .cell-done { background: #dcfce7; } .cell-done a { color: #166534; }
-    .progress-cell { position: relative; min-width: 70px; padding: 0; overflow: hidden; }
-    .progress-bar { position: absolute; top: 0; left: 0; height: 100%; z-index: 0; transition: width 0.3s; }
-    .progress-label { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; height: 100%; padding: 6px 8px; font-weight: 600; font-size: 0.8rem; }
-    .progress-active .progress-bar { background: #bbf7d0; }
-    .progress-active .progress-label { color: #166534; }
-    .progress-none .progress-label { color: #9ca3af; }
+    .progress-cell { min-width: 100px; font-weight: 600; font-size: 0.75rem; }
+    .progress-active { color: #166534; }
+    .progress-none { color: #9ca3af; }
     .legend { margin-top: 16px; margin-bottom: 24px; display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.8rem; }
     .legend-item { display: flex; align-items: center; gap: 6px; }
     .legend-swatch { width: 16px; height: 16px; border-radius: 3px; border: 1px solid #d1d5db; }
@@ -78,10 +75,7 @@
     .card-name a { color: #1d4ed8; text-decoration: none; }
     .card-lead { font-size: 0.8rem; color: #6b7280; margin-bottom: 8px; }
     .card-lead a { color: #6b7280; text-decoration: none; }
-    .card-progress { position: relative; height: 24px; background: #f3f4f6; border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
-    .card-progress-fill { position: absolute; top: 0; left: 0; height: 100%; border-radius: 12px; }
-    .card-progress-fill.fill-active { background: #bbf7d0; }
-    .card-progress-text { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; height: 100%; font-size: 0.75rem; font-weight: 600; color: #374151; }
+    .card-progress-label { font-size: 0.8rem; font-weight: 600; color: #374151; margin-bottom: 8px; }
     .card-modules { list-style: none; font-size: 0.8rem; }
     .card-modules li { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #f3f4f6; }
     .card-modules li:last-child { border-bottom: none; }
