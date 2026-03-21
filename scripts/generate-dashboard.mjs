@@ -7,6 +7,8 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 
+// ── Environment ──
+
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GITHUB_OWNER = process.env.GITHUB_OWNER;
 const GITHUB_REPO = process.env.GITHUB_REPO;
@@ -16,45 +18,36 @@ if (!GITHUB_TOKEN || !GITHUB_OWNER || !GITHUB_REPO) {
   process.exit(1);
 }
 
+// ── Config ──
+
 const config = JSON.parse(readFileSync(join(ROOT, "config.json"), "utf-8"));
 const boardId = config.board.id;
 
-// Map project key (uppercase) → project object
-const projectMap = {};
-for (const p of config.projects) {
-  projectMap[p.key.toUpperCase()] = p;
-}
-
-// Resolve bootcamp projectKeys into full project objects
-for (const bootcamp of config.bootcamps) {
-  bootcamp.projects = (bootcamp.projectKeys || []).map((key) => {
-    const proj = projectMap[key.toUpperCase()];
-    if (!proj) {
-      console.warn(`Warning: [${bootcamp.name}] projectKey "${key}" not found in top-level projects — skipping`);
-    }
-    return proj;
-  }).filter(Boolean);
-}
-
-// Map GitHub username (lowercase) → display name
 const nameMap = {};
-for (const r of config.reviewers) {
-  nameMap[r.github.toLowerCase()] = r.name;
+for (const r of config.reviewers) nameMap[r.github.toLowerCase()] = r.name;
+for (const s of config.students) nameMap[s.github.toLowerCase()] = s.name;
+
+const projectMap = {};
+for (const p of config.projects) projectMap[p.key.toUpperCase()] = p;
+
+for (const bootcamp of config.bootcamps) {
+  bootcamp.projects = (bootcamp.projectKeys || [])
+    .map((key) => {
+      const proj = projectMap[key.toUpperCase()];
+      if (!proj) console.warn(`Warning: [${bootcamp.name}] projectKey "${key}" not found — skipping`);
+      return proj;
+    })
+    .filter(Boolean);
 }
-for (const s of config.students) {
-  nameMap[s.github.toLowerCase()] = s.name;
+
+// ── Helpers ──
+
+function escapeHtml(str) {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
+
 function displayName(github) {
   return nameMap[github.toLowerCase()] || github;
-}
-
-// Count total tasks across all modules in a bootcamp
-function countTotalTasks(modules) {
-  let total = 0;
-  for (const m of modules) {
-    total += (m.tasks || []).length;
-  }
-  return total;
 }
 
 function statusPoints(status) {
@@ -63,29 +56,84 @@ function statusPoints(status) {
   return 0;
 }
 
-// Compute aggregate project order sorted by total progress across all bootcamps
+function pct(done, total) {
+  return total > 0 ? Math.round((done / total) * 100) : 0;
+}
+
+function countTasks(modules) {
+  return modules.reduce((sum, m) => sum + (m.tasks || []).length, 0);
+}
+
+function taskKey(moduleNum, taskNum) {
+  return `${moduleNum}-${taskNum}`;
+}
+
+const ISSUE_NOTICE = `> **\u26a0\ufe0f This ticket is auto-generated. Please do not change the title or contents below. Just click the "Create" button below. After a few minutes, the ticket will be automatically assigned to a reviewer \u2014 no further action needed. You can add comments after the ticket is created.**`;
+
+// ── Shared HTML fragments ──
+
+function projectHeaderHtml(proj, done, total) {
+  const p = pct(done, total);
+  const nameHtml = proj.repo
+    ? `<a href="${escapeHtml(proj.repo)}" target="_blank" rel="noopener" title="${escapeHtml(proj.name)}">${escapeHtml(proj.key)}</a>`
+    : `<span title="${escapeHtml(proj.name)}">${escapeHtml(proj.key)}</span>`;
+  return `<th class="project-header" title="${escapeHtml(proj.name)} \u2014 ${done} / ${total} tasks completed (${p}%)">${nameHtml}<div class="project-full-name">${escapeHtml(proj.name)}</div><div class="project-lead">${escapeHtml(displayName(proj.lead))}</div></th>`;
+}
+
+function progressCellHtml(done, total) {
+  const p = pct(done, total);
+  const cls = p > 0 ? "progress-active" : "progress-none";
+  return `<td class="cell progress-cell ${cls}" title="${done} / ${total} tasks completed"><div class="progress-bar" style="width:${p}%"></div><div class="progress-label">${p}%</div></td>`;
+}
+
+function statusCellHtml(entry, proj) {
+  const status = entry.status;
+  const cls = status.toLowerCase().replace(/\s+/g, "-");
+  const text = status === "Done" ? "\u2705" : status;
+  return `<td class="cell cell-${cls}"><a href="${entry.url}" target="_blank" rel="noopener" title="${escapeHtml(proj.key)}: ${status}">${text}</a></td>`;
+}
+
+function newIssueCellHtml(proj, fullName, issueBody) {
+  const url = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/issues/new?title=${encodeURIComponent(fullName)}&body=${encodeURIComponent(issueBody)}`;
+  return `<td class="cell cell-missing"><a href="${url}" target="_blank" rel="noopener" title="Create ticket for ${escapeHtml(proj.key)} - ${escapeHtml(fullName)}">+</a></td>`;
+}
+
+function newIssueBody(bootcampName, projName, moduleName, taskName) {
+  return `${ISSUE_NOTICE}\n\n### Bootcamp\n\n${bootcampName}\n\n### Project\n\n${projName}\n\n### Module\n\n${moduleName}\n\n### Task\n\n${taskName}\n\n${ISSUE_NOTICE}`;
+}
+
+// ── Scoring ──
+
+function scoreProject(proj, modules, matrix) {
+  const data = matrix[proj.key.toLowerCase()] || {};
+  let points = 0;
+  let doneCount = 0;
+  for (const m of modules) {
+    for (const t of m.tasks || []) {
+      const entry = data[taskKey(m.number, t.number)];
+      if (entry) {
+        points += statusPoints(entry.status);
+        if (entry.status === "Done") doneCount++;
+      }
+    }
+  }
+  return { proj, data, points, doneCount };
+}
+
 function computeProjectOrder(bootcamps, matrices) {
-  const projects = config.projects;
-  const order = projects.map((proj) => {
-    const key = proj.key.toLowerCase();
+  const totals = config.projects.map((proj) => {
     let totalPoints = 0;
     for (let i = 0; i < bootcamps.length; i++) {
-      const bc = bootcamps[i];
-      const data = matrices[i][key] || {};
-      for (const m of bc.modules) {
-        for (const t of (m.tasks || [])) {
-          const entry = data[`${m.number}-${t.number}`];
-          if (entry) totalPoints += statusPoints(entry.status);
-        }
-      }
+      const { points } = scoreProject(proj, bootcamps[i].modules, matrices[i]);
+      totalPoints += points;
     }
     return { proj, totalPoints };
   });
-  order.sort((a, b) => b.totalPoints - a.totalPoints);
-  return order.map((o) => o.proj);
+  totals.sort((a, b) => b.totalPoints - a.totalPoints);
+  return totals.map((t) => t.proj);
 }
 
-// --- GraphQL helpers ---
+// ── GitHub API ──
 
 async function graphql(query, variables = {}) {
   const res = await fetch("https://api.github.com/graphql", {
@@ -107,57 +155,43 @@ async function graphql(query, variables = {}) {
 async function fetchAllIssues(owner, repo) {
   const issues = [];
   let cursor = null;
-
   while (true) {
     const data = await graphql(
-      `
-      query($owner: String!, $repo: String!, $after: String) {
+      `query($owner: String!, $repo: String!, $after: String) {
         repository(owner: $owner, name: $repo) {
           issues(first: 100, after: $after, states: [OPEN, CLOSED]) {
             pageInfo { hasNextPage endCursor }
             nodes {
-              number
-              title
-              url
-              labels(first: 20) {
-                nodes { name }
-              }
+              number title url
+              labels(first: 20) { nodes { name } }
               projectItems(first: 10) {
                 nodes {
                   project { id }
                   fieldValueByName(name: "Status") {
-                    ... on ProjectV2ItemFieldSingleSelectValue {
-                      name
-                    }
+                    ... on ProjectV2ItemFieldSingleSelectValue { name }
                   }
                 }
               }
             }
           }
         }
-      }
-      `,
+      }`,
       { owner, repo, after: cursor }
     );
-
     const page = data.repository.issues;
     issues.push(...page.nodes);
-
     if (!page.pageInfo.hasNextPage) break;
     cursor = page.pageInfo.endCursor;
   }
-
   return issues;
 }
 
-// --- Build matrix for a single bootcamp ---
-// matrix[projectKey]["MM-TT"] = { status, url }  (module number + task number)
+// ── Matrix ──
+// matrix[projectKey]["moduleNum-taskNum"] = { status, url }
 
 function buildMatrix(issues, bootcamp) {
   const matrix = {};
-  for (const proj of config.projects) {
-    matrix[proj.key.toLowerCase()] = {};
-  }
+  for (const proj of config.projects) matrix[proj.key.toLowerCase()] = {};
 
   for (const issue of issues) {
     const labels = issue.labels.nodes.map((l) => l.name);
@@ -167,11 +201,8 @@ function buildMatrix(issues, bootcamp) {
     const projectLabel = labels.find((l) => /^project-/.test(l));
 
     if (bootcampLabel !== `bootcamp-${bootcamp.id}`) continue;
-
     if (moduleLabel && !projectLabel) {
-      console.warn(
-        `Warning: [${bootcamp.name}] Issue #${issue.number} has ${moduleLabel} but no project- label — skipping`
-      );
+      console.warn(`Warning: [${bootcamp.name}] Issue #${issue.number} has ${moduleLabel} but no project- label — skipping`);
       continue;
     }
     if (!moduleLabel || !projectLabel || !taskLabel) continue;
@@ -181,176 +212,140 @@ function buildMatrix(issues, bootcamp) {
     const projKey = projectLabel.replace("project-", "");
 
     if (!matrix[projKey]) {
-      console.warn(
-        `Warning: [${bootcamp.name}] Issue #${issue.number} has label ${projectLabel} but no matching project in config — skipping`
-      );
+      console.warn(`Warning: [${bootcamp.name}] Issue #${issue.number} has label ${projectLabel} but no matching project — skipping`);
       continue;
     }
 
-    const projectItem = issue.projectItems.nodes.find(
-      (n) => n.project.id === boardId
-    );
+    const projectItem = issue.projectItems.nodes.find((n) => n.project.id === boardId);
     const status = projectItem?.fieldValueByName?.name || "In Review";
-
-    matrix[projKey][`${moduleNum}-${taskNum}`] = { status, url: issue.url };
+    matrix[projKey][taskKey(moduleNum, taskNum)] = { status, url: issue.url };
   }
-
   return matrix;
 }
 
-// --- Generate HTML section for a single bootcamp ---
+// ── Desktop table ──
 
-function generateBootcampSection(bootcamp, matrix, owner, repo, sortedProjects) {
+function renderDesktopTable(bootcamp, scored, totalTasks) {
   const modules = bootcamp.modules;
-  const totalTasks = countTotalTasks(modules);
-  const bootcampId = bootcamp.id;
+  const colCount = scored.length;
 
-  // Use the global sorted project order
-  const scored = sortedProjects.map((proj) => {
-    const key = proj.key.toLowerCase();
-    const data = matrix[key] || {};
-    let points = 0;
-    let doneCount = 0;
-    for (const m of modules) {
-      for (const t of (m.tasks || [])) {
-        const entry = data[`${m.number}-${t.number}`];
-        if (entry) {
-          points += statusPoints(entry.status);
-          if (entry.status === "Done") doneCount++;
-        }
-      }
-    }
-    return { proj, key, data, points, doneCount };
-  });
+  const headers = scored
+    .map(({ proj, doneCount }) => projectHeaderHtml(proj, doneCount, totalTasks))
+    .join("\n            ");
 
-  // Column headers
-  const projectHeaders = scored.map(({ proj, doneCount }) => {
-    const pct = totalTasks > 0 ? Math.round((doneCount / totalTasks) * 100) : 0;
-    const nameHtml = proj.repo
-      ? `<a href="${escapeHtml(proj.repo)}" target="_blank" rel="noopener" title="${escapeHtml(proj.name)}">${escapeHtml(proj.key)}</a>`
-      : `<span title="${escapeHtml(proj.name)}">${escapeHtml(proj.key)}</span>`;
-    const projectNameHtml = `<div class="project-full-name">${escapeHtml(proj.name)}</div>`;
-    const leadHtml = `<div class="project-lead">${escapeHtml(displayName(proj.lead))}</div>`;
-    return `<th class="project-header" title="${escapeHtml(proj.name)} — ${doneCount} / ${totalTasks} tasks completed (${pct}%)">${nameHtml}${projectNameHtml}${leadHtml}</th>`;
-  }).join("\n            ");
+  const progressRow = scored
+    .map(({ doneCount }) => progressCellHtml(doneCount, totalTasks))
+    .join("\n              ");
 
-  // Rows: module headers + task rows
-  const rows = modules.map((m) => {
-    const moduleName = `${m.number} - ${m.name}`;
-    const moduleLabel = m.url
-      ? `<a href="${escapeHtml(m.url)}" target="_blank" rel="noopener">${escapeHtml(moduleName)}</a>`
-      : escapeHtml(moduleName);
+  const bodyRows = modules
+    .map((m) => {
+      const moduleName = `${m.number} - ${m.name}`;
+      const label = m.url
+        ? `<a href="${escapeHtml(m.url)}" target="_blank" rel="noopener">${escapeHtml(moduleName)}</a>`
+        : escapeHtml(moduleName);
 
-    const colCount = scored.length;
-    const moduleHeaderRow = `          <tr class="module-group-header">
-            <td class="module-group-name" colspan="${colCount + 1}">${moduleLabel}</td>
+      const headerRow = `          <tr class="module-group-header">
+            <td class="module-group-name" colspan="${colCount + 1}">${label}</td>
           </tr>`;
 
-    const taskRows = (m.tasks || []).map((t) => {
-      const taskName = `${t.number} - ${t.name}`;
+      const taskRows = (m.tasks || [])
+        .map((t) => {
+          const taskName = `${t.number} - ${t.name}`;
+          const cells = scored
+            .map(({ proj, data }) => {
+              const entry = data[taskKey(m.number, t.number)];
+              if (!entry) {
+                const fullName = `${moduleName} / ${taskName}`;
+                return newIssueCellHtml(proj, fullName, newIssueBody(bootcamp.name, proj.name, moduleName, taskName));
+              }
+              return statusCellHtml(entry, proj);
+            })
+            .join("\n              ");
 
-      const cells = scored.map(({ proj, data }) => {
-        const entry = data[`${m.number}-${t.number}`];
-
-        if (!entry) {
-          const fullName = `${moduleName} / ${taskName}`;
-          const notice = `> **\u26a0\ufe0f This ticket is auto-generated. Please do not change the title or contents below. Just click the "Create" button below. After a few minutes, the ticket will be automatically assigned to a reviewer \u2014 no further action needed. You can add comments after the ticket is created.**`;
-          const issueBody = `${notice}\n\n### Bootcamp\n\n${bootcamp.name}\n\n### Project\n\n${proj.name}\n\n### Module\n\n${moduleName}\n\n### Task\n\n${taskName}\n\n${notice}`;
-          const newIssueUrl = `https://github.com/${owner}/${repo}/issues/new?title=${encodeURIComponent(fullName)}&body=${encodeURIComponent(issueBody)}`;
-          return `<td class="cell cell-missing"><a href="${newIssueUrl}" target="_blank" rel="noopener" title="Create ticket for ${escapeHtml(proj.key)} - ${escapeHtml(fullName)}">+</a></td>`;
-        }
-
-        const status = entry.status;
-        const statusClass = status.toLowerCase().replace(/\s+/g, "-");
-        const displayText = status === "Done" ? "\u2705" : status;
-
-        return `<td class="cell cell-${statusClass}"><a href="${entry.url}" target="_blank" rel="noopener" title="${escapeHtml(proj.key)}: ${status}">${displayText}</a></td>`;
-      }).join("\n              ");
-
-      return `          <tr>
+          return `          <tr>
             <td class="task-name">${escapeHtml(taskName)}</td>
               ${cells}
           </tr>`;
-    }).join("\n");
+        })
+        .join("\n");
 
-    return moduleHeaderRow + "\n" + taskRows;
-  }).join("\n");
+      return headerRow + "\n" + taskRows;
+    })
+    .join("\n");
 
-  // Progress row
-  const progressCells = scored.map(({ doneCount }) => {
-    const pct = totalTasks > 0 ? Math.round((doneCount / totalTasks) * 100) : 0;
-    const progressClass = pct > 0 ? "progress-active" : "progress-none";
-    return `<td class="cell progress-cell ${progressClass}" title="${doneCount} / ${totalTasks} tasks completed"><div class="progress-bar" style="width:${pct}%"></div><div class="progress-label">${pct}%</div></td>`;
-  }).join("\n              ");
-
-  const section = `
-  <div class="bootcamp-section" id="bootcamp-${escapeHtml(bootcampId)}">
+  return `
+  <div class="bootcamp-section" id="bootcamp-${escapeHtml(bootcamp.id)}">
     <h2 class="bootcamp-title">${escapeHtml(bootcamp.name)}</h2>
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
             <th class="module-name">Module / Task</th>
-            ${projectHeaders}
+            ${headers}
           </tr>
           <tr class="progress-row">
             <td class="module-name"><strong>Progress</strong></td>
-              ${progressCells}
+              ${progressRow}
           </tr>
         </thead>
         <tbody>
-${rows}
+${bodyRows}
           <tr class="progress-row">
             <td class="module-name"><strong>Progress</strong></td>
-              ${progressCells}
+              ${progressRow}
           </tr>
         </tbody>
       </table>
     </div>
   </div>`;
+}
 
-  // Mobile cards
-  const cardItems = scored
-    .map(({ proj, key, data, points, doneCount }) => {
-      const pct = totalTasks > 0 ? Math.round((doneCount / totalTasks) * 100) : 0;
-      const fillClass = pct > 0 ? "fill-active" : "";
+// ── Mobile cards ──
+
+function renderMobileCards(bootcamp, scored, totalTasks) {
+  const modules = bootcamp.modules;
+
+  const cards = scored
+    .map(({ proj, data, doneCount }) => {
+      const p = pct(doneCount, totalTasks);
+      const fillClass = p > 0 ? "fill-active" : "";
 
       const nameHtml = proj.repo
         ? `<a href="${escapeHtml(proj.repo)}" target="_blank" rel="noopener">${escapeHtml(proj.name)}</a>`
         : escapeHtml(proj.name);
 
-      const moduleItems = modules.map((m) => {
-        const moduleName = `${m.number} - ${m.name}`;
-        const moduleHeader = `<li class="card-module-header">${escapeHtml(moduleName)}</li>`;
+      const moduleItems = modules
+        .map((m) => {
+          const moduleName = `${m.number} - ${m.name}`;
+          const header = `<li class="card-module-header">${escapeHtml(moduleName)}</li>`;
+          const tasks = (m.tasks || [])
+            .map((t) => {
+              const taskName = `${t.number} - ${t.name}`;
+              const entry = data[taskKey(m.number, t.number)];
+              if (!entry) {
+                const fullName = `${moduleName} / ${taskName}`;
+                const url = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/issues/new?title=${encodeURIComponent(fullName)}&body=${encodeURIComponent(newIssueBody(bootcamp.name, proj.name, moduleName, taskName))}`;
+                return `<li class="card-task-item"><span class="card-task-name">${escapeHtml(taskName)}</span><span class="card-module-status card-status-missing"><a href="${url}" target="_blank" rel="noopener">+</a></span></li>`;
+              }
+              const cls = "card-status-" + entry.status.toLowerCase().replace(/\s+/g, "-");
+              return `<li class="card-task-item"><span class="card-task-name">${escapeHtml(taskName)}</span><span class="card-module-status ${cls}"><a href="${entry.url}" target="_blank" rel="noopener">${entry.status}</a></span></li>`;
+            })
+            .join("\n");
+          return header + "\n" + tasks;
+        })
+        .join("\n");
 
-        const taskItems = (m.tasks || []).map((t) => {
-          const taskName = `${t.number} - ${t.name}`;
-          const entry = data[`${m.number}-${t.number}`];
-          if (!entry) {
-            const fullName = `${moduleName} / ${taskName}`;
-            const notice = `> **\u26a0\ufe0f This ticket is auto-generated. Please do not change the title or contents below. Just click the "Create" button below. After a few minutes, the ticket will be automatically assigned to a reviewer \u2014 no further action needed. You can add comments after the ticket is created.**`;
-            const issueBody = `${notice}\n\n### Bootcamp\n\n${bootcamp.name}\n\n### Project\n\n${proj.name}\n\n### Module\n\n${moduleName}\n\n### Task\n\n${taskName}\n\n${notice}`;
-            const newIssueUrl = `https://github.com/${owner}/${repo}/issues/new?title=${encodeURIComponent(fullName)}&body=${encodeURIComponent(issueBody)}`;
-            return `<li class="card-task-item"><span class="card-task-name">${escapeHtml(taskName)}</span><span class="card-module-status card-status-missing"><a href="${newIssueUrl}" target="_blank" rel="noopener">+</a></span></li>`;
-          }
-          const statusClass = "card-status-" + entry.status.toLowerCase().replace(/\s+/g, "-");
-          return `<li class="card-task-item"><span class="card-task-name">${escapeHtml(taskName)}</span><span class="card-module-status ${statusClass}"><a href="${entry.url}" target="_blank" rel="noopener">${entry.status}</a></span></li>`;
-        }).join("\n");
+      const filterText = [proj.key, proj.name, ...proj.members.map((m) => displayName(m)), ...proj.members].join(" ").toLowerCase();
 
-        return moduleHeader + "\n" + taskItems;
-      }).join("\n");
-
-      const cardFilterText = [proj.key, proj.name, ...proj.members.map(m => displayName(m)), ...proj.members].join(" ").toLowerCase();
-
-      return `    <div class="card" data-filter="${escapeHtml(cardFilterText)}">
+      return `    <div class="card" data-filter="${escapeHtml(filterText)}">
       <div class="card-header">
         <span class="card-name">${nameHtml}</span>
         <span class="card-code">${escapeHtml(proj.key)}</span>
       </div>
       <div class="card-lead">Lead: <a href="https://github.com/${encodeURIComponent(proj.lead)}" target="_blank" rel="noopener">${escapeHtml(displayName(proj.lead))}</a></div>
       <div class="card-progress" title="${doneCount} / ${totalTasks} tasks completed">
-        <div class="card-progress-fill ${fillClass}" style="width:${pct}%"></div>
-        <div class="card-progress-text">${pct}%</div>
+        <div class="card-progress-fill ${fillClass}" style="width:${p}%"></div>
+        <div class="card-progress-text">${p}%</div>
       </div>
       <ul class="card-modules">
 ${moduleItems}
@@ -359,89 +354,63 @@ ${moduleItems}
     })
     .join("\n");
 
-  const cardSection = `
-  <div class="bootcamp-section-mobile" id="bootcamp-${escapeHtml(bootcampId)}-mobile">
+  return `
+  <div class="bootcamp-section-mobile" id="bootcamp-${escapeHtml(bootcamp.id)}-mobile">
     <h2 class="bootcamp-title">${escapeHtml(bootcamp.name)}</h2>
-${cardItems}
+${cards}
   </div>`;
-
-  return { section, cards: cardSection };
 }
 
-function escapeHtml(str) {
-  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+// ── Bootcamp section (desktop + mobile) ──
+
+function generateBootcampSection(bootcamp, matrix, sortedProjects) {
+  const modules = bootcamp.modules;
+  const totalTasks = countTasks(modules);
+  const scored = sortedProjects.map((proj) => scoreProject(proj, modules, matrix));
+  return {
+    section: renderDesktopTable(bootcamp, scored, totalTasks),
+    cards: renderMobileCards(bootcamp, scored, totalTasks),
+  };
 }
 
-// --- Summary table ---
+// ── Summary table ──
 
 function generateSummaryTable(bootcamps, matrices, sortedProjects) {
-  // Compute per-project totals using the global sorted order
   const projectTotals = sortedProjects.map((proj) => {
-    const key = proj.key.toLowerCase();
     let totalDone = 0;
     let totalTasks = 0;
-    let totalPoints = 0;
     for (let i = 0; i < bootcamps.length; i++) {
-      const bc = bootcamps[i];
-      const matrix = matrices[i];
-      const data = matrix[key] || {};
-      const bcTasks = countTotalTasks(bc.modules);
+      const { doneCount } = scoreProject(proj, bootcamps[i].modules, matrices[i]);
+      const bcTasks = countTasks(bootcamps[i].modules);
+      totalDone += doneCount;
       totalTasks += bcTasks;
-      for (const m of bc.modules) {
-        for (const t of (m.tasks || [])) {
-          const entry = data[`${m.number}-${t.number}`];
-          if (entry) {
-            totalPoints += statusPoints(entry.status);
-            if (entry.status === "Done") totalDone++;
-          }
-        }
-      }
     }
-    return { proj, key, totalDone, totalTasks, totalPoints };
+    return { proj, totalDone, totalTasks };
   });
 
-  // Column headers
-  const projectHeaders = projectTotals.map(({ proj, totalDone, totalTasks }) => {
-    const pct = totalTasks > 0 ? Math.round((totalDone / totalTasks) * 100) : 0;
-    const nameHtml = proj.repo
-      ? `<a href="${escapeHtml(proj.repo)}" target="_blank" rel="noopener" title="${escapeHtml(proj.name)}">${escapeHtml(proj.key)}</a>`
-      : `<span title="${escapeHtml(proj.name)}">${escapeHtml(proj.key)}</span>`;
-    const projectNameHtml = `<div class="project-full-name">${escapeHtml(proj.name)}</div>`;
-    const leadHtml = `<div class="project-lead">${escapeHtml(displayName(proj.lead))}</div>`;
-    return `<th class="project-header" title="${escapeHtml(proj.name)} — ${totalDone} / ${totalTasks} tasks completed (${pct}%)">${nameHtml}${projectNameHtml}${leadHtml}</th>`;
-  }).join("\n            ");
+  const headers = projectTotals
+    .map(({ proj, totalDone, totalTasks }) => projectHeaderHtml(proj, totalDone, totalTasks))
+    .join("\n            ");
 
-  // One row per bootcamp
-  const rows = bootcamps.map((bc, i) => {
-    const matrix = matrices[i];
-    const bcTasks = countTotalTasks(bc.modules);
-
-    const cells = projectTotals.map(({ key }) => {
-      const data = matrix[key] || {};
-      let done = 0;
-      for (const m of bc.modules) {
-        for (const t of (m.tasks || [])) {
-          const entry = data[`${m.number}-${t.number}`];
-          if (entry && entry.status === "Done") done++;
-        }
-      }
-      const pct = bcTasks > 0 ? Math.round((done / bcTasks) * 100) : 0;
-      const progressClass = pct > 0 ? "progress-active" : "progress-none";
-      return `<td class="cell progress-cell ${progressClass}" title="${done} / ${bcTasks} tasks completed"><div class="progress-bar" style="width:${pct}%"></div><div class="progress-label">${pct}%</div></td>`;
-    }).join("\n              ");
-
-    return `          <tr>
+  const rows = bootcamps
+    .map((bc, i) => {
+      const bcTasks = countTasks(bc.modules);
+      const cells = projectTotals
+        .map(({ proj }) => {
+          const { doneCount } = scoreProject(proj, bc.modules, matrices[i]);
+          return progressCellHtml(doneCount, bcTasks);
+        })
+        .join("\n              ");
+      return `          <tr>
             <td class="summary-label"><a href="#bootcamp-${escapeHtml(bc.id)}">${escapeHtml(bc.name)}</a></td>
               ${cells}
           </tr>`;
-  }).join("\n");
+    })
+    .join("\n");
 
-  // Total row
-  const totalCells = projectTotals.map(({ totalDone, totalTasks }) => {
-    const pct = totalTasks > 0 ? Math.round((totalDone / totalTasks) * 100) : 0;
-    const progressClass = pct > 0 ? "progress-active" : "progress-none";
-    return `<td class="cell progress-cell ${progressClass}" title="${totalDone} / ${totalTasks} tasks completed"><div class="progress-bar" style="width:${pct}%"></div><div class="progress-label">${pct}%</div></td>`;
-  }).join("\n              ");
+  const totalCells = projectTotals
+    .map(({ totalDone, totalTasks }) => progressCellHtml(totalDone, totalTasks))
+    .join("\n              ");
 
   return `
   <div class="summary-section">
@@ -451,7 +420,7 @@ function generateSummaryTable(bootcamps, matrices, sortedProjects) {
         <thead>
           <tr>
             <th class="summary-label">Bootcamp</th>
-            ${projectHeaders}
+            ${headers}
           </tr>
         </thead>
         <tbody>
@@ -466,49 +435,40 @@ ${rows}
   </div>`;
 }
 
-// --- Main ---
+// ── Main ──
 
 async function main() {
   const bootcamps = config.bootcamps;
-  const owner = GITHUB_OWNER;
-  const repo = GITHUB_REPO;
 
   console.log("Fetching issues...");
-  const issues = await fetchAllIssues(owner, repo);
+  const issues = await fetchAllIssues(GITHUB_OWNER, GITHUB_REPO);
   console.log(`Fetched ${issues.length} issues.`);
 
-  const allMatrices = [];
-  for (const bootcamp of bootcamps) {
-    console.log(`Processing ${bootcamp.name}...`);
-    allMatrices.push(buildMatrix(issues, bootcamp));
-  }
+  const matrices = bootcamps.map((bc) => {
+    console.log(`Processing ${bc.name}...`);
+    return buildMatrix(issues, bc);
+  });
 
-  // Compute a single project sort order based on aggregate progress
-  const sortedProjects = computeProjectOrder(bootcamps, allMatrices);
+  const sortedProjects = computeProjectOrder(bootcamps, matrices);
 
-  const allSections = [];
-  const allCards = [];
+  const sections = [];
+  const cards = [];
   for (let i = 0; i < bootcamps.length; i++) {
-    const { section, cards } = generateBootcampSection(bootcamps[i], allMatrices[i], owner, repo, sortedProjects);
-    allSections.push(section);
-    allCards.push(cards);
+    const result = generateBootcampSection(bootcamps[i], matrices[i], sortedProjects);
+    sections.push(result.section);
+    cards.push(result.cards);
   }
-
-  const summaryTable = generateSummaryTable(bootcamps, allMatrices, sortedProjects);
-
-  const now = new Date().toUTCString();
 
   const template = readFileSync(join(__dirname, "dashboard-template.html"), "utf-8");
-
   const html = template
-    .replace("{{LAST_UPDATED}}", now)
-    .replace("{{SUMMARY_TABLE}}", summaryTable)
-    .replace("{{BOOTCAMP_SECTIONS}}", allSections.join("\n"))
-    .replace("{{BOOTCAMP_CARDS}}", allCards.join("\n"))
+    .replace("{{LAST_UPDATED}}", new Date().toUTCString())
+    .replace("{{SUMMARY_TABLE}}", generateSummaryTable(bootcamps, matrices, sortedProjects))
+    .replace("{{BOOTCAMP_SECTIONS}}", sections.join("\n"))
+    .replace("{{BOOTCAMP_CARDS}}", cards.join("\n"))
     .replaceAll("{{CLASSROOM_TITLE}}", escapeHtml(config.title))
     .replace("{{BOARD_URL}}", escapeHtml(config.board.url))
-    .replaceAll("{{GITHUB_OWNER}}", owner)
-    .replaceAll("{{GITHUB_REPO}}", repo);
+    .replaceAll("{{GITHUB_OWNER}}", GITHUB_OWNER)
+    .replaceAll("{{GITHUB_REPO}}", GITHUB_REPO);
 
   const docsDir = join(ROOT, "docs");
   mkdirSync(docsDir, { recursive: true });
