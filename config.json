@@ -555,11 +555,13 @@
           "tasks": [
             {
               "number": "1",
-              "name": "System API Smoke Test"
+              "name": "System API Smoke Test",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73484893-system-api-smoke-test"
             },
             {
               "number": "2",
-              "name": "System UI Smoke Test"
+              "name": "System UI Smoke Test",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673635-system-ui-smoke-test"
             },
             {
               "number": "3",
@@ -580,27 +582,33 @@
           "tasks": [
             {
               "number": "1",
-              "name": "Positive API Tests"
+              "name": "Positive API Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73802601-positive-api-tests"
             },
             {
               "number": "2",
-              "name": "Negative API Tests"
+              "name": "Negative API Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70107267-negative-api-tests"
             },
             {
               "number": "3",
-              "name": "Positive UI Tests"
+              "name": "Positive UI Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70108030-positive-ui-tests"
             },
             {
               "number": "4",
-              "name": "Negative UI Tests"
+              "name": "Negative UI Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114435-negative-ui-tests"
             },
             {
               "number": "5",
-              "name": "Parameterized Tests"
+              "name": "Parameterized Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114462-parameterized-tests"
             },
             {
               "number": "6",
-              "name": "External System Limitations"
+              "name": "External System Limitations",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70108034-external-system-limitations"
             },
             {
               "number": "7",
@@ -616,23 +624,28 @@
           "tasks": [
             {
               "number": "1",
-              "name": "System API Smoke Tests"
+              "name": "System API Smoke Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70850580-system-api-smoke-tests"
             },
             {
               "number": "2",
-              "name": "System UI Smoke Tests"
+              "name": "System UI Smoke Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70341398-system-ui-smoke-tests"
             },
             {
               "number": "3",
-              "name": "External System Smoke Tests"
+              "name": "External System Smoke Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70102047-external-system-smoke-tests"
             },
             {
               "number": "4",
-              "name": "E2E API Tests"
+              "name": "E2E API Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70341449-e2e-api-tests"
             },
             {
               "number": "5",
-              "name": "E2E UI Tests"
+              "name": "E2E UI Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70341416-e2e-ui-tests"
             },
             {
               "number": "6",
@@ -648,15 +661,18 @@
           "tasks": [
             {
               "number": "1",
-              "name": "System Smoke Tests"
+              "name": "System Smoke Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70847211-system-smoke-tests"
             },
             {
               "number": "2",
-              "name": "External System Smoke Tests"
+              "name": "External System Smoke Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70847514-external-system-smoke-tests"
             },
             {
               "number": "3",
-              "name": "E2E Tests"
+              "name": "E2E Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70847220-e2e-tests"
             },
             {
               "number": "4",
@@ -672,11 +688,13 @@
           "tasks": [
             {
               "number": "1",
-              "name": "System Smoke Tests"
+              "name": "System Smoke Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114442-system-smoke-tests"
             },
             {
               "number": "2",
-              "name": "E2E Tests"
+              "name": "E2E Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114454-e2e-tests"
             },
             {
               "number": "3",
@@ -719,15 +737,18 @@
           "tasks": [
             {
               "number": "1",
-              "name": "System Smoke Tests"
+              "name": "System Smoke Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673690-system-smoke-tests"
             },
             {
               "number": "2",
-              "name": "External System Smoke Tests"
+              "name": "External System Smoke Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673694-external-system-smoke-tests"
             },
             {
               "number": "3",
-              "name": "E2E Tests"
+              "name": "E2E Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673697-e2e-tests"
             },
             {
               "number": "4",
@@ -743,23 +764,28 @@
           "tasks": [
             {
               "number": "1",
-              "name": "External System Smoke Tests — Real HTTP"
+              "name": "External System Smoke Tests — Real HTTP",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73516807-external-system-smoke-tests-real-http"
             },
             {
               "number": "2",
-              "name": "External Systems — Real Non-IO"
+              "name": "External Systems — Real Non-IO",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73518568-external-systems-real-non-io"
             },
             {
               "number": "3",
-              "name": "External System Smoke Tests — Real Non-IO"
+              "name": "External System Smoke Tests — Real Non-IO",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73523262-external-system-smoke-tests-real-non-io"
             },
             {
               "number": "4",
-              "name": "External Systems — Stub"
+              "name": "External Systems — Stub",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673713-external-systems-stub"
             },
             {
               "number": "5",
-              "name": "External System Smoke Tests — Stub"
+              "name": "External System Smoke Tests — Stub",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673725-external-system-smoke-tests-stub"
             },
             {
               "number": "6",
@@ -776,15 +802,18 @@
           "tasks": [
             {
               "number": "1",
-              "name": "Acceptance Tests"
+              "name": "Acceptance Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73524695-acceptance-tests"
             },
             {
               "number": "2",
-              "name": "Extend with Stub-Only Scenarios"
+              "name": "Extend with Stub-Only Scenarios",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73297489-extend-with-stub-only-scenarios"
             },
             {
               "number": "3",
-              "name": "Suite Separation"
+              "name": "Suite Separation",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673735-suite-separation"
             },
             {
               "number": "4",
@@ -801,15 +830,18 @@
           "tasks": [
             {
               "number": "1",
-              "name": "Real Contract Tests"
+              "name": "Real Contract Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73620963-real-contract-tests"
             },
             {
               "number": "2",
-              "name": "Stub Contract Tests"
+              "name": "Stub Contract Tests",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73620967-stub-contract-tests"
             },
             {
               "number": "3",
-              "name": "E2E Tests Cleanup"
+              "name": "E2E Tests Cleanup",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73620971-e2e-tests-cleanup"
             },
             {
               "number": "4",
@@ -849,15 +881,18 @@
           "tasks": [
             {
               "number": "1",
-              "name": "ATDD Workflow — RED Phase"
+              "name": "ATDD Workflow — RED Phase",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73652153-atdd-workflow-red-phase"
             },
             {
               "number": "2",
-              "name": "ATDD Workflow — GREEN Phase"
+              "name": "ATDD Workflow — GREEN Phase",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73652159-atdd-workflow-green-phase"
             },
             {
               "number": "3",
-              "name": "Bug Fix (Optional)"
+              "name": "Bug Fix (Optional)",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673746-bug-fix-optional"
             },
             {
               "number": "4",
@@ -874,15 +909,18 @@
           "tasks": [
             {
               "number": "1",
-              "name": "Contract Test — RED"
+              "name": "Contract Test — RED",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673757-contract-test-red"
             },
             {
               "number": "2",
-              "name": "Contract Test — GREEN"
+              "name": "Contract Test — GREEN",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673761-contract-test-green"
             },
             {
               "number": "3",
-              "name": "Complete the ATDD Cycle"
+              "name": "Complete the ATDD Cycle",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673762-complete-the-atdd-cycle"
             },
             {
               "number": "4",
@@ -976,11 +1014,13 @@
             },
             {
               "number": "13",
-              "name": "Use Case DSL - Alignment Meeting Guide"
+              "name": "Use Case DSL - Alignment Meeting Guide",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673841-use-case-dsl-alignment-meeting-guide"
             },
             {
               "number": "14",
-              "name": "Use Case DSL - Showcase Meeting Guide"
+              "name": "Use Case DSL - Showcase Meeting Guide",
+              "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673847-use-case-dsl-showcase-meeting-guide"
             },
             {
               "number": "15",
