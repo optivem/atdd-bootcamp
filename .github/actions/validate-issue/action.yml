@@ -34,18 +34,18 @@ outputs:
   module-num:
     description: The module number (e.g. "02").
     value: ${{ steps.validate.outputs.module_num }}
-  module-slug:
-    description: The module slug from the course folder name (e.g. "01-introduction").
-    value: ${{ steps.validate.outputs.module_slug }}
+  module-label:
+    description: The module label from the course folder name (e.g. "01-introduction").
+    value: ${{ steps.validate.outputs.module_label }}
   task:
     description: The selected task string.
     value: ${{ steps.validate.outputs.task }}
   task-num:
     description: The task number (e.g. "03").
     value: ${{ steps.validate.outputs.task_num }}
-  task-slug:
-    description: The task slug from the lesson file name (e.g. "01-setup").
-    value: ${{ steps.validate.outputs.task_slug }}
+  task-label:
+    description: The task label from the lesson file name (e.g. "01-setup").
+    value: ${{ steps.validate.outputs.task_label }}
   assignees:
     description: Comma-separated list of team member GitHub usernames.
     value: ${{ steps.validate.outputs.assignees }}
@@ -131,21 +131,21 @@ runs:
           core.setOutput('assignees', team.members.join(','));
           core.setOutput('course_id', courseId);
 
-          // Look up slugs from config
-          let moduleSlug = '';
-          let taskSlug = '';
+          // Look up labels from config
+          let moduleLabel = '';
+          let taskLabel = '';
           if (courseId) {
             const course = data.courses.find(c => c.id === courseId);
             if (course) {
               const mod = course.modules.find(m => m.number === moduleNum);
               if (mod) {
-                moduleSlug = mod.slug || '';
+                moduleLabel = mod.label || '';
                 if (taskNum) {
                   const task = mod.tasks.find(t => t.number === taskNum);
-                  if (task) taskSlug = task.slug || '';
+                  if (task) taskLabel = task.label || '';
                 }
               }
             }
           }
-          core.setOutput('module_slug', moduleSlug);
-          core.setOutput('task_slug', taskSlug);
+          core.setOutput('module_label', moduleLabel);
+          core.setOutput('task_label', taskLabel);

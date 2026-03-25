@@ -11,11 +11,11 @@ inputs:
   course-id:
     description: The course id (e.g. "atdd", "pipeline").
     required: true
-  module-slug:
-    description: The module slug from the course folder name (e.g. "01-introduction").
+  module-label:
+    description: The module label from the course folder name (e.g. "01-introduction").
     required: true
-  task-slug:
-    description: The task slug from the lesson file name (e.g. "01-setup").
+  task-label:
+    description: The task label from the lesson file name (e.g. "01-setup").
     required: true
 
 outputs:
@@ -40,8 +40,8 @@ runs:
           const currentNumber = ${{ inputs.issue-number }};
           const projectLabel = 'project-${{ inputs.project-key }}';
           const courseLabel = 'course-${{ inputs.course-id }}';
-          const moduleLabel = 'module-${{ inputs.module-slug }}';
-          const taskLabel = 'task-${{ inputs.task-slug }}';
+          const moduleLabel = 'module-${{ inputs.module-label }}';
+          const taskLabel = 'task-${{ inputs.task-label }}';
 
           const labelList = [projectLabel, courseLabel, moduleLabel, taskLabel].filter(l => !l.endsWith('-')).join(',');
 

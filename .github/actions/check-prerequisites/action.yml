@@ -68,7 +68,7 @@ runs:
           // Find all issues for the previous module + this project
           const projectLabel = `project-${projectKey}`;
           const courseLabel = `course-${courseId}`;
-          const moduleLabel = `module-${prevModule.slug || prevModule.number}`;
+          const moduleLabel = `module-${prevModule.label || prevModule.number}`;
 
           const issues = await github.rest.issues.listForRepo({
             owner: context.repo.owner,
@@ -78,20 +78,20 @@ runs:
             per_page: 100
           });
 
-          // Build a map of task slug → issue node ID
+          // Build a map of task label → issue node ID
           const taskIssueMap = {};
           for (const issue of issues.data) {
             const taskLabel = issue.labels.find(l => /^task-.+/.test(l.name));
             if (taskLabel) {
-              const taskSlug = taskLabel.name.replace('task-', '');
-              taskIssueMap[taskSlug] = issue.node_id;
+              const taskKey = taskLabel.name.replace('task-', '');
+              taskIssueMap[taskKey] = issue.node_id;
             }
           }
 
           // Check each task in the previous module
           const incompleteTasks = [];
           for (const task of prevTasks) {
-            const nodeId = taskIssueMap[task.slug || task.number];
+            const nodeId = taskIssueMap[task.label || task.number];
             if (!nodeId) {
               incompleteTasks.push(`${prevModule.number}.${task.number} - ${task.name}`);
               continue;

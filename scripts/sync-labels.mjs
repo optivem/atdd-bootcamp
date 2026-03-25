@@ -32,10 +32,10 @@ for (const c of config.courses) {
 
 for (const c of config.courses) {
   for (const m of c.modules) {
-    const moduleKey = m.slug || m.number;
+    const moduleKey = m.label || m.number;
     expected.set(`module-${moduleKey}`, COLORS.module);
     for (const t of (m.tasks || [])) {
-      const taskKey = t.slug || t.number;
+      const taskKey = t.label || t.number;
       expected.set(`task-${taskKey}`, COLORS.task);
     }
   }

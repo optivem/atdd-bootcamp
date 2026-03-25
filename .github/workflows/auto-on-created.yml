@@ -19,10 +19,10 @@ jobs:
       repo-url: ${{ steps.validate.outputs.repo-url }}
       course-id: ${{ steps.validate.outputs.course-id }}
       module-num: ${{ steps.validate.outputs.module-num }}
-      module-slug: ${{ steps.validate.outputs.module-slug }}
+      module-label: ${{ steps.validate.outputs.module-label }}
       module: ${{ steps.validate.outputs.module }}
       task-num: ${{ steps.validate.outputs.task-num }}
-      task-slug: ${{ steps.validate.outputs.task-slug }}
+      task-label: ${{ steps.validate.outputs.task-label }}
       task: ${{ steps.validate.outputs.task }}
     steps:
       - uses: actions/checkout@v6
@@ -53,8 +53,8 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           project-key: ${{ needs.validate.outputs.project-key }}
           course-id: ${{ needs.validate.outputs.course-id }}
-          module-slug: ${{ needs.validate.outputs.module-slug }}
-          task-slug: ${{ needs.validate.outputs.task-slug }}
+          module-label: ${{ needs.validate.outputs.module-label }}
+          task-label: ${{ needs.validate.outputs.task-label }}
 
       - name: Check module prerequisites
         id: prereqs
@@ -169,7 +169,7 @@ jobs:
         uses: ./.github/actions/add-labels
         with:
           issue-number: ${{ github.event.issue.number }}
-          labels: "project-${{ needs.validate.outputs.project-key }}, course-${{ needs.validate.outputs.course-id }}, module-${{ needs.validate.outputs.module-slug }}, task-${{ needs.validate.outputs.task-slug }}"
+          labels: "project-${{ needs.validate.outputs.project-key }}, course-${{ needs.validate.outputs.course-id }}, module-${{ needs.validate.outputs.module-label }}, task-${{ needs.validate.outputs.task-label }}"
 
       - name: Set issue type to Task
         uses: ./.github/actions/set-issue-type
