@@ -9,16 +9,19 @@
       "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73358802-overview",
       "tasks": [
         {
-          "number": "1",
+          "number": "01",
           "name": "Setup",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673627-setup"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673627-setup",
+          "slug": "01-setup"
         },
         {
-          "number": "2",
+          "number": "02",
           "name": "Sandbox Project",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673632-sandbox-project"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673632-sandbox-project",
+          "slug": "02-sandbox-project"
         }
-      ]
+      ],
+      "slug": "01-introduction"
     },
     {
       "number": "02",
@@ -26,26 +29,31 @@
       "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73483348-overview",
       "tasks": [
         {
-          "number": "1",
+          "number": "01",
           "name": "System API Smoke Test",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73484893-system-api-smoke-test"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73484893-system-api-smoke-test",
+          "slug": "01-system-api-smoke-test"
         },
         {
-          "number": "2",
+          "number": "02",
           "name": "System UI Smoke Test",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673635-system-ui-smoke-test"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673635-system-ui-smoke-test",
+          "slug": "02-system-ui-smoke-test"
         },
         {
-          "number": "3",
+          "number": "03",
           "name": "External System Smoke Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73485021-external-system-smoke-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73485021-external-system-smoke-tests",
+          "slug": "03-external-system-smoke-tests"
         },
         {
-          "number": "4",
+          "number": "04",
           "name": "Sandbox Project",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673638-sandbox-project"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673638-sandbox-project",
+          "slug": "04-sandbox-project"
         }
-      ]
+      ],
+      "slug": "02-smoke-tests"
     },
     {
       "number": "03",
@@ -53,41 +61,49 @@
       "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70107114-overview",
       "tasks": [
         {
-          "number": "1",
+          "number": "01",
           "name": "Positive API Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73802601-positive-api-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73802601-positive-api-tests",
+          "slug": "01-positive-api-tests"
         },
         {
-          "number": "2",
+          "number": "02",
           "name": "Negative API Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70107267-negative-api-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70107267-negative-api-tests",
+          "slug": "02-negative-api-tests"
         },
         {
-          "number": "3",
+          "number": "03",
           "name": "Positive UI Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70108030-positive-ui-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70108030-positive-ui-tests",
+          "slug": "03-positive-ui-tests"
         },
         {
-          "number": "4",
+          "number": "04",
           "name": "Negative UI Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114435-negative-ui-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114435-negative-ui-tests",
+          "slug": "04-negative-ui-tests"
         },
         {
-          "number": "5",
+          "number": "05",
           "name": "Parameterized Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114462-parameterized-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114462-parameterized-tests",
+          "slug": "05-parameterized-tests"
         },
         {
-          "number": "6",
+          "number": "06",
           "name": "External System Limitations",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70108034-external-system-limitations"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70108034-external-system-limitations",
+          "slug": "06-external-system-limitations"
         },
         {
-          "number": "7",
+          "number": "07",
           "name": "Sandbox Project",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673661-sandbox-project"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673661-sandbox-project",
+          "slug": "07-sandbox-project"
         }
-      ]
+      ],
+      "slug": "03-e2e-tests"
     },
     {
       "number": "04",
@@ -95,36 +111,43 @@
       "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70102035-overview",
       "tasks": [
         {
-          "number": "1",
+          "number": "01",
           "name": "System API Smoke Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70850580-system-api-smoke-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70850580-system-api-smoke-tests",
+          "slug": "01-system-api-smoke-tests"
         },
         {
-          "number": "2",
+          "number": "02",
           "name": "System UI Smoke Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70341398-system-ui-smoke-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70341398-system-ui-smoke-tests",
+          "slug": "02-system-ui-smoke-tests"
         },
         {
-          "number": "3",
+          "number": "03",
           "name": "External System Smoke Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70102047-external-system-smoke-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70102047-external-system-smoke-tests",
+          "slug": "03-external-system-smoke-tests"
         },
         {
-          "number": "4",
+          "number": "04",
           "name": "E2E API Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70341449-e2e-api-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70341449-e2e-api-tests",
+          "slug": "04-e2e-api-tests"
         },
         {
-          "number": "5",
+          "number": "05",
           "name": "E2E UI Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70341416-e2e-ui-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70341416-e2e-ui-tests",
+          "slug": "05-e2e-ui-tests"
         },
         {
-          "number": "6",
+          "number": "06",
           "name": "Sandbox Project",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70102037-sandbox-project"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70102037-sandbox-project",
+          "slug": "06-sandbox-project"
         }
-      ]
+      ],
+      "slug": "04-architecture-clients"
     },
     {
       "number": "05",
@@ -132,26 +155,31 @@
       "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114420-overview",
       "tasks": [
         {
-          "number": "1",
+          "number": "01",
           "name": "System Smoke Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70847211-system-smoke-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70847211-system-smoke-tests",
+          "slug": "01-system-smoke-tests"
         },
         {
-          "number": "2",
+          "number": "02",
           "name": "External System Smoke Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70847514-external-system-smoke-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70847514-external-system-smoke-tests",
+          "slug": "02-external-system-smoke-tests"
         },
         {
-          "number": "3",
+          "number": "03",
           "name": "E2E Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70847220-e2e-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70847220-e2e-tests",
+          "slug": "03-e2e-tests"
         },
         {
-          "number": "4",
+          "number": "04",
           "name": "Sandbox Project",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114441-sandbox-project"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114441-sandbox-project",
+          "slug": "04-sandbox-project"
         }
-      ]
+      ],
+      "slug": "05-architecture-drivers"
     },
     {
       "number": "06",
@@ -159,21 +187,25 @@
       "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114424-overview",
       "tasks": [
         {
-          "number": "1",
+          "number": "01",
           "name": "System Smoke Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114442-system-smoke-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114442-system-smoke-tests",
+          "slug": "01-system-smoke-tests"
         },
         {
-          "number": "2",
+          "number": "02",
           "name": "E2E Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114454-e2e-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114454-e2e-tests",
+          "slug": "02-e2e-tests"
         },
         {
-          "number": "3",
+          "number": "03",
           "name": "Sandbox Project",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114247-sandbox-project"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114247-sandbox-project",
+          "slug": "03-sandbox-project"
         }
-      ]
+      ],
+      "slug": "06-architecture-channels"
     },
     {
       "number": "07",
@@ -181,26 +213,31 @@
       "url": "https://optivem.thinkific.com/courses/take/atdd/texts/70114427-overview",
       "tasks": [
         {
-          "number": "1",
+          "number": "01",
           "name": "System Smoke Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673676-system-smoke-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673676-system-smoke-tests",
+          "slug": "01-system-smoke-tests"
         },
         {
-          "number": "2",
+          "number": "02",
           "name": "External System Smoke Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673681-external-system-smoke-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673681-external-system-smoke-tests",
+          "slug": "02-external-system-smoke-tests"
         },
         {
-          "number": "3",
+          "number": "03",
           "name": "E2E Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673682-e2e-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673682-e2e-tests",
+          "slug": "03-e2e-tests"
         },
         {
-          "number": "4",
+          "number": "04",
           "name": "Sandbox Project",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673684-sandbox-project"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673684-sandbox-project",
+          "slug": "04-sandbox-project"
         }
-      ]
+      ],
+      "slug": "07-architecture-usecase-dsl"
     },
     {
       "number": "08",
@@ -208,26 +245,31 @@
       "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73252031-overview",
       "tasks": [
         {
-          "number": "1",
+          "number": "01",
           "name": "System Smoke Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673690-system-smoke-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673690-system-smoke-tests",
+          "slug": "01-system-smoke-tests"
         },
         {
-          "number": "2",
+          "number": "02",
           "name": "External System Smoke Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673694-external-system-smoke-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673694-external-system-smoke-tests",
+          "slug": "02-external-system-smoke-tests"
         },
         {
-          "number": "3",
+          "number": "03",
           "name": "E2E Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673697-e2e-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673697-e2e-tests",
+          "slug": "03-e2e-tests"
         },
         {
-          "number": "4",
+          "number": "04",
           "name": "Sandbox Project",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673700-sandbox-project"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673700-sandbox-project",
+          "slug": "04-sandbox-project"
         }
-      ]
+      ],
+      "slug": "08-architecture-scenario-dsl"
     },
     {
       "number": "09",
@@ -235,36 +277,43 @@
       "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73513385-overview",
       "tasks": [
         {
-          "number": "1",
+          "number": "01",
           "name": "External System Smoke Tests — Real HTTP",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73516807-external-system-smoke-tests-real-http"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73516807-external-system-smoke-tests-real-http",
+          "slug": "01-external-system-smoke-tests-real-http"
         },
         {
-          "number": "2",
+          "number": "02",
           "name": "External Systems — Real Non-IO",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73518568-external-systems-real-non-io"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73518568-external-systems-real-non-io",
+          "slug": "02-external-systems-real-non-io"
         },
         {
-          "number": "3",
+          "number": "03",
           "name": "External System Smoke Tests — Real Non-IO",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73523262-external-system-smoke-tests-real-non-io"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73523262-external-system-smoke-tests-real-non-io",
+          "slug": "03-external-system-smoke-tests-real-non-io"
         },
         {
-          "number": "4",
+          "number": "04",
           "name": "External Systems — Stub",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673713-external-systems-stub"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673713-external-systems-stub",
+          "slug": "04-external-systems-stub"
         },
         {
-          "number": "5",
+          "number": "05",
           "name": "External System Smoke Tests — Stub",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673725-external-system-smoke-tests-stub"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673725-external-system-smoke-tests-stub",
+          "slug": "05-external-system-smoke-tests-stub"
         },
         {
-          "number": "6",
+          "number": "06",
           "name": "Sandbox Project",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673730-sandbox-project"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673730-sandbox-project",
+          "slug": "06-sandbox-project"
         }
-      ]
+      ],
+      "slug": "09-architecture-external-stubs"
     },
     {
       "number": "10",
@@ -273,26 +322,31 @@
       "week": 15,
       "tasks": [
         {
-          "number": "1",
+          "number": "01",
           "name": "Acceptance Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73524695-acceptance-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73524695-acceptance-tests",
+          "slug": "01-acceptance-tests"
         },
         {
-          "number": "2",
+          "number": "02",
           "name": "Extend with Stub-Only Scenarios",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73297489-extend-with-stub-only-scenarios"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73297489-extend-with-stub-only-scenarios",
+          "slug": "02-stub-only-scenarios"
         },
         {
-          "number": "3",
+          "number": "03",
           "name": "Suite Separation",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673735-suite-separation"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673735-suite-separation",
+          "slug": "03-suite-separation"
         },
         {
-          "number": "4",
+          "number": "04",
           "name": "Sandbox Project",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673737-sandbox-project"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673737-sandbox-project",
+          "slug": "04-sandbox-project"
         }
-      ]
+      ],
+      "slug": "10-acceptance-tests"
     },
     {
       "number": "11",
@@ -301,26 +355,31 @@
       "week": 17,
       "tasks": [
         {
-          "number": "1",
+          "number": "01",
           "name": "Real Contract Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73620963-real-contract-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73620963-real-contract-tests",
+          "slug": "01-real-contract-tests"
         },
         {
-          "number": "2",
+          "number": "02",
           "name": "Stub Contract Tests",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73620967-stub-contract-tests"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73620967-stub-contract-tests",
+          "slug": "02-stub-contract-tests"
         },
         {
-          "number": "3",
+          "number": "03",
           "name": "E2E Tests Cleanup",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73620971-e2e-tests-cleanup"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73620971-e2e-tests-cleanup",
+          "slug": "03-e2e-tests-cleanup"
         },
         {
-          "number": "4",
+          "number": "04",
           "name": "Sandbox Project",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73620977-sandbox-project"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73620977-sandbox-project",
+          "slug": "04-sandbox-project"
         }
-      ]
+      ],
+      "slug": "11-external-system-contract-tests"
     },
     {
       "number": "12",
@@ -329,21 +388,25 @@
       "week": 18,
       "tasks": [
         {
-          "number": "1",
+          "number": "01",
           "name": "Three Amigos Session",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73487343-three-amigos-session"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73487343-three-amigos-session",
+          "slug": "01-three-amigos-session"
         },
         {
-          "number": "2",
+          "number": "02",
           "name": "Acceptance Criteria",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73487567-acceptance-criteria"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73487567-acceptance-criteria",
+          "slug": "02-acceptance-criteria"
         },
         {
-          "number": "3",
+          "number": "03",
           "name": "Sandbox Project",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73543765-sandbox-project"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73543765-sandbox-project",
+          "slug": "03-sandbox-project"
         }
-      ]
+      ],
+      "slug": "12-atdd-acceptance-criteria"
     },
     {
       "number": "13",
@@ -352,26 +415,31 @@
       "week": 19,
       "tasks": [
         {
-          "number": "1",
+          "number": "01",
           "name": "ATDD Workflow — RED Phase",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73652153-atdd-workflow-red-phase"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73652153-atdd-workflow-red-phase",
+          "slug": "01-red-phase"
         },
         {
-          "number": "2",
+          "number": "02",
           "name": "ATDD Workflow — GREEN Phase",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73652159-atdd-workflow-green-phase"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73652159-atdd-workflow-green-phase",
+          "slug": "02-green-phase"
         },
         {
-          "number": "3",
+          "number": "03",
           "name": "Bug Fix (Optional)",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673746-bug-fix-optional"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673746-bug-fix-optional",
+          "slug": "03-bug-fix"
         },
         {
-          "number": "4",
+          "number": "04",
           "name": "Sandbox Project",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673750-sandbox-project"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673750-sandbox-project",
+          "slug": "04-sandbox-project"
         }
-      ]
+      ],
+      "slug": "13-atdd-acceptance-tests"
     },
     {
       "number": "14",
@@ -380,26 +448,31 @@
       "week": 20,
       "tasks": [
         {
-          "number": "1",
+          "number": "01",
           "name": "Contract Test — RED",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673757-contract-test-red"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673757-contract-test-red",
+          "slug": "01-contract-test-red"
         },
         {
-          "number": "2",
+          "number": "02",
           "name": "Contract Test — GREEN",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673761-contract-test-green"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673761-contract-test-green",
+          "slug": "02-contract-test-green"
         },
         {
-          "number": "3",
+          "number": "03",
           "name": "Complete the ATDD Cycle",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673762-complete-the-atdd-cycle"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673762-complete-the-atdd-cycle",
+          "slug": "03-complete-the-atdd-cycle"
         },
         {
-          "number": "4",
+          "number": "04",
           "name": "Sandbox Project",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673764-sandbox-project"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673764-sandbox-project",
+          "slug": "04-sandbox-project"
         }
-      ]
+      ],
+      "slug": "14-atdd-external-system-contract-tests"
     },
     {
       "number": "15",
@@ -408,16 +481,19 @@
       "week": 21,
       "tasks": [
         {
-          "number": "1",
+          "number": "01",
           "name": "UX/UI Redesign",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673777-ux-ui-redesign"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673777-ux-ui-redesign",
+          "slug": "01-ux-ui-redesign"
         },
         {
-          "number": "2",
+          "number": "02",
           "name": "Sandbox Project",
-          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673787-sandbox-project"
+          "url": "https://optivem.thinkific.com/courses/take/atdd/texts/73673787-sandbox-project",
+          "slug": "02-sandbox-project"
         }
-      ]
+      ],
+      "slug": "15-structural-changes"
     }
   ],
   "projectKeys": [
