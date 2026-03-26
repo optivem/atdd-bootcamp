@@ -55,7 +55,7 @@ runs:
             : `${compositeId} | ${selectedModule}`;
 
           let body = `## Overview\n\n`;
-          body += `**Project Name:** [${projectName}](${repoUrl})\n`;
+          body += `**Project:** [${projectName}](${repoUrl})\n`;
           body += `**Course:** ${courseName}\n`;
           body += `**Module:** ${selectedModule}\n`;
           if (selectedTask) {
