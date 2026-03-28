@@ -1,0 +1,9 @@
+{
+  "GITHUB_OWNER": "valentinajemuovic",
+  "SYSTEM_DOMAIN": "Book Store",
+  "SYSTEM_NAME": "Page Turner",
+  "MONOLITH_LANGUAGE": "java",
+  "SYSTEM_TEST_LANGUAGE": "java",
+  "ARCHITECTURE": "monolith",
+  "REPOSITORY_STRATEGY": "mono-repo"
+}

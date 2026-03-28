@@ -41,8 +41,8 @@ Before doing anything, collect all the information needed upfront. Ask these que
 
 **Batch 2:**
 5. **System test language** — Same as monolith, or different.
-6. **Architecture** — Single component or multiple components (if multi, ask how many and what they are).
-7. **Repository strategy** — Mono repo or multi repo (multi repo only if multi component).
+6. **Architecture** — Monolith or multi-component (if multi-component, ask how many and what they are).
+7. **Repository strategy** — Mono-repo or multi-repo (multi-repo only if multi-component).
 
 **Batch 3 (credentials — never handle token values directly):**
 
