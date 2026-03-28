@@ -31,11 +31,11 @@ Same as Onboarding Guide, plus:
 
 The tester needs credentials as environment variables. For each credential type, the tester checks specific env var names (listed below). If any required credential is missing, fail at Step 00.
 
-| Credential | Env vars checked (in order) | Required at |
+| Credential | Env var | Required at |
 |---|---|---|
-| Docker Hub username | `DOCKERHUB_USERNAME`, `SANDBOX_DOCKERHUB_USERNAME` | Step 00 |
-| Docker Hub token | `DOCKERHUB_TOKEN`, `SANDBOX_DOCKERHUB_TOKEN` | Step 00 |
-| SonarCloud token | `SONAR_TOKEN`, `SANDBOX_SONAR_TOKEN` | Step 02a (can defer) |
+| Docker Hub username | `DOCKERHUB_USERNAME` | Step 00 |
+| Docker Hub token | `DOCKERHUB_TOKEN` | Step 00 |
+| SonarCloud token | `SONAR_TOKEN` | Step 02a (can defer) |
 
 ## Workflow
 
