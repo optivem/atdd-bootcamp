@@ -2,7 +2,7 @@
 
 This guide covers setting up SonarCloud static code analysis for public GitHub repositories. After completing this, the Commit Stage will include automated code analysis with coverage reporting.
 
-All steps use the command line except for the initial one-time SonarCloud sign-in and token generation.
+All steps use the command line except where noted as (UI).
 
 ## Prerequisites
 
@@ -53,141 +53,35 @@ curl -s -u "${SONAR_TOKEN}:" \
   "https://sonarcloud.io/api/projects/search?organization=${SONAR_ORG}" | jq '.components[].key'
 ```
 
-## 4. Select Analysis Method (UI)
+## 4. Add GitHub Secret (CLI)
 
-After creating the project, SonarCloud will prompt you to choose an analysis method:
-
-1. Go to your project on [sonarcloud.io](https://sonarcloud.io).
-2. Select **With GitHub Actions**.
-3. You can skip the setup instructions shown — the steps below cover everything needed.
-
-## 5. Add GitHub Secrets and Variables (CLI)
-
-Run these from your repository root:
+The `SONAR_TOKEN` is the same for all repos in your organization — it is your personal token, not per-project.
 
 ```bash
 gh secret set SONAR_TOKEN --body "${SONAR_TOKEN}"
-gh variable set SONAR_HOST_URL --body "https://sonarcloud.io"
 ```
 
 Verify:
 
 ```bash
 gh secret list
-gh variable list
 ```
 
-## 6. Configure the Build
+## 5. Follow SonarCloud's Onboarding Instructions (UI)
 
-Follow the section for your language below.
+SonarCloud provides tailored setup instructions for your specific language and build tool:
 
----
+1. Go to your project on [sonarcloud.io](https://sonarcloud.io).
+2. Select **With GitHub Actions** as the analysis method.
+3. SonarCloud will show you step-by-step instructions for:
+   - Creating the GitHub secret (already done in Step 4)
+   - Updating your build file (e.g. `build.gradle`, `.csproj`, `package.json`)
+   - Creating or updating your CI workflow file
+4. Follow the build file and CI workflow instructions for your language.
 
-### Java (Gradle)
+**Important**: When adding the CI step, add it to your existing `commit-stage-monolith.yml` workflow (replacing the "Run Code Analysis" placeholder step) rather than creating a new workflow file as SonarCloud suggests.
 
-In your `monolith/build.gradle`, add the `jacoco` and `org.sonarqube` plugins:
-
-```gradle
-plugins {
-    id 'java'
-    id 'checkstyle'
-    id 'jacoco'
-    id 'org.sonarqube' version '6.0.1.5171'
-    id 'org.springframework.boot' version '3.5.6'
-    id 'io.spring.dependency-management' version '1.1.7'
-}
-```
-
-Configure JaCoCo for code coverage and Sonar properties:
-
-```gradle
-tasks.named('test') {
-    useJUnitPlatform()
-    finalizedBy jacocoTestReport
-}
-
-jacocoTestReport {
-    dependsOn test
-    reports {
-        xml.required = true
-    }
-}
-
-sonar {
-    properties {
-        property 'sonar.projectKey', '<your-org>_<your-repo>'
-        property 'sonar.projectName', '<your-repo>'
-        property 'sonar.organization', '<your-org>'
-        property 'sonar.coverage.jacoco.xmlReportPaths', "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
-    }
-}
-```
-
-Replace `<your-org>` and `<your-repo>` with your values from Steps 2 and 3.
-
----
-
-### .NET
-
-No build file changes are needed. The `dotnet-sonarscanner` tool is installed and run directly in CI (see Step 7).
-
----
-
-### TypeScript (Node.js)
-
-No build file changes are needed. The `sonar-scanner` is run via `npx` directly in CI (see Step 7).
-
----
-
-## 7. Add the Code Analysis Step to CI
-
-In your `.github/workflows/commit-stage-monolith.yml`, replace the "Run Code Analysis" placeholder step with the section for your language below.
-
-### Java (Gradle)
-
-```yaml
-      - name: Run Code Analysis
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: ./gradlew test jacocoTestReport sonar
-        working-directory: monolith
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-```
-
-### .NET
-
-```yaml
-      - name: Run Code Analysis
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          dotnet tool install --global dotnet-sonarscanner
-          dotnet sonarscanner begin /k:"<your-org>_<your-repo>" /o:"<your-org>" /d:sonar.token="${SONAR_TOKEN}" /d:sonar.host.url="${SONAR_HOST_URL}"
-          dotnet build <your-project>.csproj
-          dotnet sonarscanner end /d:sonar.token="${SONAR_TOKEN}"
-        working-directory: monolith
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-```
-
-Replace `<your-org>`, `<your-repo>`, and `<your-project>.csproj` with your values.
-
-### TypeScript (Node.js)
-
-```yaml
-      - name: Run Code Analysis
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: npx sonar-scanner -Dsonar.projectKey=<your-org>_<your-repo> -Dsonar.organization=<your-org> -Dsonar.sources=src -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-        working-directory: monolith
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-```
-
-Replace `<your-org>` and `<your-repo>` with your values.
-
-## 8. Verify
+## 6. Verify
 
 Commit and push, then check the workflow:
 
