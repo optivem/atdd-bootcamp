@@ -32,9 +32,35 @@ Before doing anything, collect all the information needed upfront. Ask these que
 6. **Architecture** — Ask: "What architecture will you use?" Options: Single component (monolith only), Multiple components (e.g. frontend + backend). If multi-component, also ask how many and what they are (e.g. "frontend, backend").
 7. **Repository strategy** — Ask: "How do you want to organize your repositories?" Options: Mono repo (everything in one repo), Multi repo (separate repos per component). Note: Multi repo only makes sense if they chose multiple components.
 
-**Batch 3 (credentials — explain why each is needed):**
-8. **DockerHub username** — Ask for their DockerHub username (needed as a GitHub Actions variable for publishing Docker images).
-9. **DockerHub token** — Ask them to create a DockerHub access token at https://hub.docker.com/settings/security and paste it (needed as a GitHub Actions secret).
+**Batch 3 (credentials — the agent never handles token values directly):**
+
+First, check if credentials are already available as local environment variables:
+```bash
+echo "DOCKERHUB_USERNAME=${DOCKERHUB_USERNAME:-(not set)}"
+echo "DOCKERHUB_TOKEN=${DOCKERHUB_TOKEN:-(not set)}"
+echo "SONAR_TOKEN=${SONAR_TOKEN:-(not set)}"
+```
+
+For any credentials found in env vars, use them to set the GitHub repo secrets/variables automatically:
+```bash
+gh variable set DOCKERHUB_USERNAME --body "$DOCKERHUB_USERNAME" --repo {owner}/{repo}
+gh secret set DOCKERHUB_TOKEN --body "$DOCKERHUB_TOKEN" --repo {owner}/{repo}
+gh secret set SONAR_TOKEN --body "$SONAR_TOKEN" --repo {owner}/{repo}
+```
+
+For any credentials NOT found in env vars, ask the user to set them manually in their GitHub repository settings (Settings -> Secrets and variables -> Actions). Provide instructions to create accounts/tokens if they don't have them:
+
+8. **DockerHub username** — Add a **variable** named `DOCKERHUB_USERNAME`. If they don't have a DockerHub account, create one at https://hub.docker.com.
+9. **DockerHub token** — Add a **secret** named `DOCKERHUB_TOKEN`. If they don't have a token, create one at https://hub.docker.com/settings/security.
+10. **SonarCloud token** — Add a **secret** named `SONAR_TOKEN`. If they don't have a token, create one at sonarcloud.io: log in with GitHub -> My Account -> Security -> Generate Tokens -> name it "ci".
+
+After all credentials are set (whether from env vars or manually), verify they all exist:
+```bash
+gh variable list --repo {owner}/{repo} --json name --jq '.[].name' | grep DOCKERHUB_USERNAME
+gh secret list --repo {owner}/{repo} --json name --jq '.[].name' | grep -E 'DOCKERHUB_TOKEN|SONAR_TOKEN'
+```
+
+If any are missing, tell the user which ones and ask them to try again.
 
 Store all answers in variables for use throughout the process.
 
@@ -93,10 +119,10 @@ Store all answers in variables for use throughout the process.
 
    Ask the user what namespace they want to use via AskUserQuestion.
 
-7. Add DockerHub credentials:
+7. DockerHub credentials were already set by the user in Phase 0. Verify they exist:
    ```bash
-   gh variable set DOCKERHUB_USERNAME --body "{dockerhub-username}" --repo {owner}/{repo}
-   gh secret set DOCKERHUB_TOKEN --body "{dockerhub-token}" --repo {owner}/{repo}
+   gh variable list --repo {owner}/{repo} --json name --jq '.[].name' | grep DOCKERHUB_USERNAME
+   gh secret list --repo {owner}/{repo} --json name --jq '.[].name' | grep DOCKERHUB_TOKEN
    ```
 
 8. Commit and push:
@@ -163,38 +189,23 @@ Store all answers in variables for use throughout the process.
 
 ### Step 5a: SonarCloud Setup (docs/pipeline/05a-sonarcloud-setup.md)
 
-**Prompt user (requires browser — one-time):**
-- "Please complete these SonarCloud browser steps:
-  1. Go to sonarcloud.io and log in with your GitHub account
-  2. Go to My Account -> Security -> Generate Tokens
-  3. Create a token named 'ci' and copy it
-  4. Paste the token here."
+The SONAR_TOKEN secret was already set by the user in Phase 0.
 
-**Automated (after user provides token):**
-1. Create/verify SonarCloud organization:
-   ```bash
-   curl -s -u "{sonar-token}:" -X POST "https://sonarcloud.io/api/organizations/create" -d "key={github-org}&name={github-org}"
-   ```
-
-2. Create SonarCloud project:
-   ```bash
-   curl -s -u "{sonar-token}:" -X POST "https://sonarcloud.io/api/projects/create" -d "organization={github-org}&project={github-org}_{repo}&name={repo}"
-   ```
-
-3. Add SONAR_TOKEN as GitHub secret:
-   ```bash
-   gh secret set SONAR_TOKEN --body "{sonar-token}" --repo {owner}/{repo}
-   ```
-
-**Prompt user:**
-- "Please go to your project on sonarcloud.io, select 'With GitHub Actions' as the analysis method, and follow the build file instructions for your language ({language}). The CI workflow step should be added to your existing commit-stage-monolith.yml (replace the 'Run Code Analysis' placeholder). Let me know when you've made the changes."
+**Prompt user (requires browser):**
+- "Please complete these SonarCloud setup steps:
+  1. Go to sonarcloud.io and import your GitHub organization (if not already done)
+  2. Create a project for your repository
+  3. Select 'With GitHub Actions' as the analysis method
+  4. Follow the build file instructions for your language ({language}) — add the analysis step to your existing `commit-stage-monolith.yml` (replace the 'Run Code Analysis' placeholder)
+  5. Commit and push your changes
+  Let me know when done."
 
 **Automated (after user confirms):**
-1. Pull latest changes, commit if needed, push.
-2. Wait for workflow to pass.
-3. Verify SonarCloud metrics:
+1. Pull latest changes.
+2. Wait for `commit-stage-monolith` workflow to pass.
+3. Verify SONAR_TOKEN secret exists:
    ```bash
-   curl -s -u "{sonar-token}:" "https://sonarcloud.io/api/measures/component?component={project-key}&metricKeys=bugs,vulnerabilities,code_smells,coverage" | python3 -c "import sys,json; print(json.dumps(json.load(sys.stdin).get('component',{}).get('measures',[]), indent=2))"
+   gh secret list --repo {owner}/{repo} --json name --jq '.[].name' | grep SONAR_TOKEN
    ```
 
 ### Step 6: Acceptance Stage (docs/pipeline/06-acceptance-stage.md)
