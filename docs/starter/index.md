@@ -1,13 +1,13 @@
 # Starter
 
-## Single Component
+## Monolith
 
-1. [Setup](01-setup.md)
-2. [Commit Stage](02-commit-stage.md)
-   - [SonarCloud Setup](02a-sonarcloud-setup.md)
-3. [Acceptance Stage](03-acceptance-stage.md)
-4. [QA Stage](04-qa-stage.md)
-5. [Production Stage](05-production-stage.md)
+1. [Monolith - Setup](01-monolith-setup.md)
+2. [Monolith - Commit Stage](02-monolith-commit-stage.md)
+   - [Monolith - SonarCloud Setup](02a-monolith-sonarcloud-setup.md)
+3. [Monolith - Acceptance Stage](03-monolith-acceptance-stage.md)
+4. [Monolith - QA Stage](04-monolith-qa-stage.md)
+5. [Monolith - Production Stage](05-monolith-production-stage.md)
 
 ## Multi Component
 
