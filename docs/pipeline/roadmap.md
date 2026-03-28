@@ -31,7 +31,15 @@ This page gives you the full picture — every module, every task, time estimate
 
 ---
 
-## Module 3. QA Stage (~1h)
+## Module 3. Acceptance Stage (~1h)
+
+**Task 1. Acceptance Stage** ~1h
+- `acceptance-stage` workflow completes with placeholder stages for: Smoke Tests, Acceptance Tests, External System Contract Tests, E2E Tests
+- Release candidate created in GitHub Releases; Docker image tagged with RC version
+
+---
+
+## Module 4. QA Stage (~1h)
 
 **Task 1. QA Stage** ~1h
 - `qa-stage` workflow completes with placeholder stage for: Smoke Tests; release marked as QA deployed
@@ -39,20 +47,12 @@ This page gives you the full picture — every module, every task, time estimate
 
 ---
 
-## Module 4. Production Stage (~1h)
+## Module 5. Production Stage (~1h)
 
 **Task 1. Production Stage** ~1h
 - Shared release subprocess extracted (used by both QA and Production stages) with placeholder stage for: Smoke Tests
 - `prod-stage` workflow completes
 - Release tagged and marked as Latest in GitHub Releases
-
----
-
-## Module 5. Acceptance Stage (~1h)
-
-**Task 1. Acceptance Stage** ~1h
-- `acceptance-stage` workflow completes with placeholder stages for: Smoke Tests, Acceptance Tests, External System Contract Tests, E2E Tests
-- Release candidate created in GitHub Releases; Docker image tagged with RC version
 
 ---
 
@@ -107,9 +107,9 @@ This page gives you the full picture — every module, every task, time estimate
 |--------|:-----:|------:|
 | 1. Introduction | 4 | 4 |
 | 2. Commit Stage | 1 | 1 |
-| 3. QA Stage | 1 | 1 |
-| 4. Production Stage | 1 | 1 |
-| 5. Acceptance Stage | 1 | 1 |
+| 3. Acceptance Stage | 1 | 1 |
+| 4. QA Stage | 1 | 1 |
+| 5. Production Stage | 1 | 1 |
 | 6. Technical Customization | 1 | 1 |
 | 7. Domain Customization | 3 | 3 |
 | 8. Architecture Customization | 2 | 6 |
@@ -123,7 +123,7 @@ This page gives you the full picture — every module, every task, time estimate
 |:----:|--------|-------|------:|
 | 1 | 1. Introduction | Tasks 1–4 (Repo + Template + Docs + Board) | 4 |
 | 1 | 2. Commit Stage | Task 1 | 1 |
-| 2 | 3–5. Pipeline Stages | QA + Production + Acceptance stages | 3 |
+| 2 | 3–5. Pipeline Stages | Acceptance + QA + Production stages | 3 |
 | 2 | 6. Technical Customization | Task 1 (Languages) | 1 |
 | 3 | 7. Domain Customization | Tasks 1–3 (Behavior Docs + Smoke + E2E) | 3 |
 | 3 | 8. Architecture Customization | Task 1 (Multi-Component) | 3 |

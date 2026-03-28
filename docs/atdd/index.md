@@ -1,4 +1,6 @@
-# ATDD
+# ATDD — Sandbox Setup
+
+These docs cover sandbox-specific setup only (Module 1 of the ATDD course). Course lessons covering topics applicable to both sandbox and real-life projects are in the course materials.
 
 1. [Repository Setup](01-repository-setup.md)
 2. [Repository Strategy Documentation](02-repository-strategy-documentation.md)
@@ -10,7 +12,3 @@
 8. [Clock Dependency](08-clock-dependency.md)
 9. [Business Logic](09-business-logic.md)
 10. [E2E Tests](10-e2e-tests.md)
-
-## Reference
-
-- [Roadmap](roadmap.md)
