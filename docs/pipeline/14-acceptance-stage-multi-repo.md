@@ -4,20 +4,24 @@ For a working example, see the [Greeter Multi Repo](https://github.com/optivem/g
 
 ## 1. Create Token
 
-1. In the top-right corner of any GitHub page, click your profile photo → **Settings**.
-2. Go to **Developer Settings** → **Personal access tokens** → **Tokens (classic)**.
-3. Click **Generate new token** → **Generate new token (classic)**.
-4. In Note, write: `DOCKER_REGISTRY_TOKEN`
-5. Under Select scopes, tick: `write:packages`, `read:packages`.
-6. Click **Generate token**.
-7. Copy the token value — you won't see it again.
+Create a Personal Access Token (classic) with `write:packages` and `read:packages` scopes:
 
-Add the PAT as a system repository secret:
+```bash
+gh auth token  # verify you're logged in
+```
 
-1. In your system repository, go to **Settings** → **Secrets and variables** → **Actions**.
-2. Click **New repository secret**:
-   - Name: `DOCKER_REGISTRY_TOKEN`
-   - Secret: paste the token value.
+1. Go to https://github.com/settings/tokens and click **Generate new token** → **Generate new token (classic)**.
+2. In Note, write: `DOCKER_REGISTRY_TOKEN`
+3. Under Select scopes, tick: `write:packages`, `read:packages`.
+4. Click **Generate token** and copy the token value.
+
+Add the PAT as a secret on your system repository:
+
+```bash
+gh secret set DOCKER_REGISTRY_TOKEN --repo <owner>/<system-repo>
+```
+
+Paste the token value when prompted.
 
 ## 2. Update Image References
 

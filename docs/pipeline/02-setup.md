@@ -24,9 +24,12 @@
 6. In the Docker Compose file, ensure that everything is lowercase in the image url.
 7. Commit and push.
 8. Add Docker Hub credentials to your repository:
-   - Go to your repository on GitHub → **Settings** → **Secrets and variables** → **Actions**.
-   - Under **Variables**, add `DOCKERHUB_USERNAME` — your Docker Hub username.
-   - Under **Secrets**, add `DOCKERHUB_TOKEN` — a Docker Hub access token (create one at [Docker Hub Security Settings](https://hub.docker.com/settings/security)).
+   - Create a Docker Hub access token at [Docker Hub Security Settings](https://hub.docker.com/settings/security) if you don't have one.
+   - Then run:
+     ```bash
+     gh variable set DOCKERHUB_USERNAME --body "your-dockerhub-username" --repo <owner>/<repo>
+     gh secret set DOCKERHUB_TOKEN --body "your-dockerhub-token" --repo <owner>/<repo>
+     ```
 9. Manually trigger `commit-stage-monolith` and wait for it to finish successfully.
 10. Manually trigger `acceptance-stage` and wait for it to finish successfully.
 
