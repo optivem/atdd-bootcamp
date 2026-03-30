@@ -5,6 +5,16 @@
     "SYSTEM_NAME": "Page Turner"
   },
   "batches": {
+    "quick": {
+      "description": "Default",
+      "scenarios": {
+        "monolith-java": {
+          "ARCHITECTURE": "monolith",
+          "REPOSITORY_STRATEGY": "mono-repo",
+          "BACKEND_LANGUAGE": "java",
+          "SYSTEM_TEST_LANGUAGE": "java"
+        }
+    },
     "monolith-single-language": {
       "description": "Monolith — same language for backend and tests",
       "scenarios": {
