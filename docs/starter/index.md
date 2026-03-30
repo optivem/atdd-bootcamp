@@ -8,6 +8,10 @@
 3. [Project Ticket Board](03-project-ticket-board.md)
 4. [System Architecture](05-system-architecture.md)
 
+## Course
+
+- [Project Submission](course/01-project-submission.md)
+
 ## Monolith
 
 5. [Monolith - Setup](06-monolith-setup.md)
